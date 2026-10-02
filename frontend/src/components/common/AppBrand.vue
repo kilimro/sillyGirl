@@ -6,18 +6,18 @@ withDefaults(
   }>(),
   {
     href: "",
-    label: "SillyGirl",
+    label: "MianPro",
   },
 );
 </script>
 
 <template>
   <a v-if="href" :href="href" class="app-brand">
-    <span class="app-brand-mark" role="img" aria-label="傻妞 Logo"></span>
+    <span class="app-brand-mark" role="img" aria-label="MianPro Logo"></span>
     <span>{{ label }}</span>
   </a>
   <div v-else class="app-brand">
-    <span class="app-brand-mark" role="img" aria-label="傻妞 Logo"></span>
+    <span class="app-brand-mark" role="img" aria-label="MianPro Logo"></span>
     <span>{{ label }}</span>
   </div>
 </template>

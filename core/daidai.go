@@ -12,7 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/goccy/go-json"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 const daidaiPanelsStorageKey = "daidai_panels"

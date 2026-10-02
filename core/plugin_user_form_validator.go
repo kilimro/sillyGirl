@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 const nodeUserFormValidatorScript = `

@@ -220,7 +220,7 @@ docker run -d --name sillygirl --restart unless-stopped \
   -p 8080:8080 \
   -e SILLYGIRL_DATA_PATH=/data \
   -v "$PWD/data:/data" \
-  smallfawn/sillygirl:latest
+  kilimro/sillygirl:latest
 ```
 
 ### 值编码
@@ -281,7 +281,7 @@ go run ./cmd/storage-migrate
 
 **Proto 文件**：`proto3/srpc.proto`
 
-**Go 包**：`github.com/smallfawn/sillyGirl/proto3/srpc`
+**Go 包**：`github.com/kilimro/sillyGirl/proto3/srpc`
 
 **服务名**：`SillyGirlService`
 

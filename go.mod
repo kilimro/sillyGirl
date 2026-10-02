@@ -1,4 +1,4 @@
-module github.com/smallfawn/sillyGirl
+module github.com/kilimro/sillyGirl
 
 go 1.26.5
 
@@ -43,6 +43,7 @@ require (
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/klauspost/compress v1.18.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
+	github.com/larksuite/oapi-sdk-go/v3 v3.12.0 // indirect
 	github.com/miekg/dns v1.1.55 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect

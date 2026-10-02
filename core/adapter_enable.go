@@ -3,7 +3,7 @@ package core
 import (
 	"strings"
 
-	"github.com/smallfawn/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/core/storage"
 )
 
 func init() {

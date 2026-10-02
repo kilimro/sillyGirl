@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/proto3/srpc"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/proto3/srpc"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 type SillyGirlService struct {

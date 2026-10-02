@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smallfawn/sillyGirl/proto3/srpc"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/proto3/srpc"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 func (sg *SillyGirlService) AdapterRegist(stream srpc.SillyGirlService_AdapterRegistServer) error {

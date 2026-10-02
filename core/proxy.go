@@ -15,8 +15,8 @@ import (
 	"github.com/Dreamacro/clash/adapter"
 	C "github.com/Dreamacro/clash/constant"
 	"github.com/google/uuid"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 // type ProxyKey struct {

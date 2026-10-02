@@ -6,7 +6,13 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
+)
+
+// 飞书一键接入 handler，由 adapters/feishu 包在 init 时注入
+var (
+	FeishuRegisterHandler        func(ctx *gin.Context)
+	FeishuRegisterStatusHandler  func(ctx *gin.Context)
 )
 
 var adminSettingsKeys = []string{
@@ -32,6 +38,9 @@ var adminBotSettingsKeys = []string{
 	"dingtalk.enable", "dingtalk.client_id", "dingtalk.client_secret", "dingtalk.debug",
 	"qqguild.enable", "qqguild.mode", "qqguild.app_id", "qqguild.app_secret", "qqguild.sandbox", "qqguild.debug",
 	"pagermaid.enable", "pagermaid.token", "pagermaid.debug",
+	"feishu.enable", "feishu.app_id", "feishu.app_secret", "feishu.verification_token", "feishu.debug",
+	"flowbot.enable", "flowbot.token", "flowbot.host", "flowbot.port", "flowbot.tls", "flowbot.debug",
+	"yyw.enable", "yyw.api_base", "yyw.selfid", "yyw.authorization",
 	"sillyGirl.web_chat_public",
 }
 
@@ -55,6 +64,17 @@ func init() {
 	GinApi(GET, "/api/admin/message-rules/:kind", RequireAuth, handleGetMessageRules)
 	GinApi(POST, "/api/admin/message-rules/:kind/:key", RequireAuth, handlePutMessageRule)
 	GinApi(POST, "/api/admin/message-rules/:kind/:key/deletions", RequireAuth, handleDeleteMessageRule)
+	// 飞书一键接入：handler 由 adapters/feishu 包注入（本地工具，不强制 auth）
+	GinApi(POST, "/api/admin/feishu/register", func(ctx *gin.Context) {
+		if FeishuRegisterHandler != nil {
+			FeishuRegisterHandler(ctx)
+		}
+	})
+	GinApi(GET, "/api/admin/feishu/register", func(ctx *gin.Context) {
+		if FeishuRegisterStatusHandler != nil {
+			FeishuRegisterStatusHandler(ctx)
+		}
+	})
 }
 
 func adminStorageValues(keys []string) map[string]interface{} {

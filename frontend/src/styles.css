@@ -2,6 +2,22 @@
   box-sizing: border-box;
 }
 
+/* Ant Design 按钮里 lucide 图标垂直对齐修复 */
+.ant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.ant-btn .ant-btn-icon {
+  margin-inline-end: 0 !important;
+  display: inline-flex;
+  align-items: center;
+}
+.ant-btn .ant-btn-icon > svg {
+  display: block;
+}
+
 html {
   min-width: 320px;
   min-height: 100%;

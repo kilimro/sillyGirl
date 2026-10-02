@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/smallfawn/sillyGirl/core/logs"
+	"github.com/kilimro/sillyGirl/core/logs"
 )
 
 var SlaveMode bool

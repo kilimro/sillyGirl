@@ -23,9 +23,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smallfawn/sillyGirl/core"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 const (

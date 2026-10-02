@@ -9,19 +9,21 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/smallfawn/sillyGirl/adapters/clawbot"
-	_ "github.com/smallfawn/sillyGirl/adapters/dingtalk"
-	_ "github.com/smallfawn/sillyGirl/adapters/flowbot"
-	_ "github.com/smallfawn/sillyGirl/adapters/pagermaid"
-	_ "github.com/smallfawn/sillyGirl/adapters/qq"
-	_ "github.com/smallfawn/sillyGirl/adapters/qqguild"
-	_ "github.com/smallfawn/sillyGirl/adapters/telegram"
-	"github.com/smallfawn/sillyGirl/adapters/web"
-	"github.com/smallfawn/sillyGirl/core"
-	"github.com/smallfawn/sillyGirl/core/common"
-	storagemigrate "github.com/smallfawn/sillyGirl/internal/storage_migrate"
+	_ "github.com/kilimro/sillyGirl/adapters/clawbot"
+	_ "github.com/kilimro/sillyGirl/adapters/dingtalk"
+	_ "github.com/kilimro/sillyGirl/adapters/feishu"
+	_ "github.com/kilimro/sillyGirl/adapters/flowbot"
+	_ "github.com/kilimro/sillyGirl/adapters/pagermaid"
+	_ "github.com/kilimro/sillyGirl/adapters/qq"
+	_ "github.com/kilimro/sillyGirl/adapters/qqguild"
+	_ "github.com/kilimro/sillyGirl/adapters/telegram"
+	_ "github.com/kilimro/sillyGirl/adapters/yyw"
+	"github.com/kilimro/sillyGirl/adapters/web"
+	"github.com/kilimro/sillyGirl/core"
+	"github.com/kilimro/sillyGirl/core/common"
+	storagemigrate "github.com/kilimro/sillyGirl/internal/storage_migrate"
 
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 var app = core.MakeBucket("app")

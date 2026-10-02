@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 var temp *PersistentKeyValueStore

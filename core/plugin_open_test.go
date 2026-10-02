@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/smallfawn/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/core/common"
 )
 
 func TestLocalPrivatePluginsExcludesRemoteAndNonScriptFunctions(t *testing.T) {

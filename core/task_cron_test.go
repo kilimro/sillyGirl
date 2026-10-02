@@ -11,8 +11,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 func writeTaskTestPlugin(t *testing.T, name, content string) string {

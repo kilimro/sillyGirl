@@ -3,7 +3,7 @@ package core
 import (
 	"testing"
 
-	"github.com/smallfawn/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/core/common"
 )
 
 func TestRunScriptTaskCommandUsesConfiguredRecipient(t *testing.T) {

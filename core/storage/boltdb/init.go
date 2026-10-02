@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
-	"github.com/smallfawn/sillyGirl/core/logs"
-	"github.com/smallfawn/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/core/logs"
+	"github.com/kilimro/sillyGirl/core/storage"
 
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 type Bucket struct {
@@ -64,14 +64,14 @@ func InitsillyGirl() storage.Bucket {
 	if err != nil {
 		f, err := os.Create(bd)
 		if err != nil {
-			logs.Info("傻妞无法创建数据文件 %s ，请手动创建", bd)
+			logs.Info("MianPro无法创建数据文件 %s ，请手动创建", bd)
 			os.Exit(0)
 		}
 		f.Close()
 	}
 	db, err = bolt.Open(bd, 0600, nil)
 	if err != nil {
-		logs.Info("傻妞无法创建数据文件 %s ，请手动创建", bd)
+		logs.Info("MianPro无法创建数据文件 %s ，请手动创建", bd)
 		os.Exit(0)
 	}
 

@@ -20,7 +20,7 @@ func TestParseGithubPublicFileIndexReadsDependenciesField(t *testing.T) {
     "raw": "https://raw.githubusercontent.com/smallfawn/sillyGirl_Plugins/main/plugins/getPrinterStatus.js",
     "dependencies": ["ipp", "axios", "node:fs", "sillygirl", "ipp"],
     "type": "node",
-    "origin": "https://github.com/smallfawn/sillyGirl_Plugins"
+    "origin": "https://github.com/kilimro/sillyGirl_Plugins"
   }
 }`)
 

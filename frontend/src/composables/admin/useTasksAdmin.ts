@@ -13,6 +13,7 @@ export function useTasksAdmin() {
     qqguild: "QQ 官方频道机器人",
     web: "Web Bot",
     pagermaid: "Pagermaid",
+    feishu: "飞书机器人",
   };
   const tasks = reactive({
     rows: [] as Task[],

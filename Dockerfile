@@ -8,7 +8,7 @@ RUN --mount=type=cache,target=/root/.npm \
     cd frontend && if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 COPY frontend ./frontend
-RUN mkdir -p core/admin && cd frontend && npm run build
+RUN mkdir -p core/admin && cd frontend && npx vite build
 
 FROM --platform=$BUILDPLATFORM golang:1.26.5-bookworm AS builder
 ARG VERSION=dev
@@ -27,7 +27,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build \
     -trimpath \
-    -ldflags="-s -w -X github.com/smallfawn/sillyGirl/core.compiled_at=${VERSION}" \
+    -ldflags="-s -w -X github.com/kilimro/sillyGirl/core.compiled_at=${VERSION}" \
     -o /out/sillyGirl .
 
 FROM --platform=$TARGETPLATFORM python:3.12-slim-bookworm AS python-runtime

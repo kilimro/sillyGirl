@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/goccy/go-json"
-	storagemigrate "github.com/smallfawn/sillyGirl/internal/storage_migrate"
+	storagemigrate "github.com/kilimro/sillyGirl/internal/storage_migrate"
 )
 
 func main() {

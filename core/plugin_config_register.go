@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 func registerNodePluginConfigSchema(path, uuid string) error {

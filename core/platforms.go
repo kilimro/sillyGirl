@@ -3,7 +3,7 @@ package core
 import (
 	"encoding/json"
 
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 var platforms = []string{}

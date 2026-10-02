@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 const maxPluginDependencyScanBytes int64 = 4 << 20

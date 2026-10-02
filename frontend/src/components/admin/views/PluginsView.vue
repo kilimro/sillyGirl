@@ -393,7 +393,7 @@ const {
               id="plugin-source-address"
               name="plugin-source-address"
               v-model:value="plugins.sourceAddress"
-              placeholder="https://github.com/smallfawn/sillyGirl_Plugins 或 link://..."
+              placeholder="https://github.com/kilimro/sillyGirl_Plugins 或 link://..."
               @press-enter="addPluginSource"
             />
             <Button

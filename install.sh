@@ -1,7 +1,7 @@
 n="sillyGirl"
 s="/usr/local/$n"
 a=arm64
-repo="smallfawn/sillyGirl"
+repo="kilimro/sillyGirl"
 proxy="${GITHUB_PROXY:-https://gh-proxy.org}"
 if [[ $(uname -a | grep "x86_64") != "" ]]; then 
     a=amd64
@@ -23,5 +23,5 @@ d="$proxy/https://github.com/$repo/releases/download/${tag}/${asset}"
 echo "检测到版本 $tag"
 echo "正在从 $d 下载..."
 curl -fL -o "$asset" "$d" && tar -xzf "$asset" && mv "sillyGirl_${tag}_linux_${a}" "$n" && chmod 755 "$n"
-echo "傻妞已安装到 $s"
+echo "MianPro 已安装到 $s"
 echo "请手动运行 $s/$n 带 -t 进入交互模式"

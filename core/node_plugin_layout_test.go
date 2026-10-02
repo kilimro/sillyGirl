@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/smallfawn/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/core/common"
 )
 
 type pluginRoundTripFunc func(*http.Request) (*http.Response, error)

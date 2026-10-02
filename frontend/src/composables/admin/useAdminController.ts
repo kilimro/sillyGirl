@@ -282,7 +282,9 @@ export function useAdminController() {
       { platform: "qqguild", label: "QQ 官方频道机器人" },
       { platform: "web", label: "Web Bot" },
       { platform: "telegram", label: "Telegram Bot" },
+      { platform: "yyw", label: "YYW 微信" },
       { platform: "flowbot", label: "FlowBot 微信" },
+      { platform: "feishu", label: "飞书机器人" },
     ];
     const rows = new Map(
       (user.value?.adapters || []).map((item) => [item.platform, item]),
@@ -324,7 +326,7 @@ export function useAdminController() {
       local: info.local || "1.1.6",
       remote: info.remote || info.local || "1.1.6",
       source: info.source || "reserved",
-      repository: info.repository || "https://github.com/smallfawn/sillyGirl",
+      repository: info.repository || "https://github.com/kilimro/sillyGirl",
     };
   });
   const overviewUserStats = computed(() => ({
@@ -2268,6 +2270,15 @@ export function useAdminController() {
     flowbot_enable: boolean; flowbot_token: string; flowbot_host: string;
     flowbot_port: string; flowbot_tls: boolean; flowbot_debug: boolean;
     web_chat_public: boolean;
+    feishu_enable: boolean;
+    feishu_app_id: string;
+    feishu_app_secret: string;
+    feishu_verification_token: string;
+    feishu_debug: boolean;
+    yyw_enable: boolean;
+    yyw_api_base: string;
+    yyw_selfid: string;
+    yyw_authorization: string;
   };
 
   type BotSettingsPlatform =
@@ -2277,7 +2288,7 @@ export function useAdminController() {
     | "dingtalk"
     | "qqguild"
     | "web"
-    | "pagermaid" | "flowbot";
+    | "pagermaid" | "flowbot" | "feishu" | "yyw";
 
   type ClawbotLoginStart = {
     session: string;
@@ -2330,6 +2341,15 @@ export function useAdminController() {
       flowbot_enable: true, flowbot_token: "", flowbot_host: "127.0.0.1",
       flowbot_port: "7400", flowbot_tls: false, flowbot_debug: false,
       web_chat_public: false,
+      feishu_enable: true,
+      feishu_app_id: "",
+      feishu_app_secret: "",
+      feishu_verification_token: "",
+      feishu_debug: false,
+      yyw_enable: false,
+      yyw_api_base: "",
+      yyw_selfid: "",
+      yyw_authorization: "",
     } as BotSettingsForm,
   });
   const botSettingsModal = reactive({
@@ -2537,6 +2557,13 @@ export function useAdminController() {
         : window.location.host;
     return `${window.location.protocol}//${host}/api/web-chat/messages`;
   });
+  const feishuWebhookURL = computed(() => {
+    const host =
+      window.location.port === "5173"
+        ? `${window.location.hostname}:8080`
+        : window.location.host;
+    return `${window.location.protocol}//${host}/feishu/webhook`;
+  });
   const pagermaidBridgeURL = computed(() => {
     const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
     const host =
@@ -2597,6 +2624,15 @@ export function useAdminController() {
         flowbot_host: data["flowbot.host"] || "127.0.0.1", flowbot_port: data["flowbot.port"] != null ? String(data["flowbot.port"]) : "7400",
         flowbot_tls: boolSetting(data["flowbot.tls"]), flowbot_debug: boolSetting(data["flowbot.debug"]),
         web_chat_public: boolSetting(data["sillyGirl.web_chat_public"]),
+        feishu_enable: boolSetting(data["feishu.enable"], true),
+        feishu_app_id: data["feishu.app_id"] || "",
+        feishu_app_secret: data["feishu.app_secret"] || "",
+        feishu_verification_token: data["feishu.verification_token"] || "",
+        feishu_debug: boolSetting(data["feishu.debug"]),
+        yyw_enable: boolSetting(data["yyw.enable"]),
+        yyw_api_base: data["yyw.api_base"] || "",
+        yyw_selfid: data["yyw.selfid"] || "",
+        yyw_authorization: data["yyw.authorization"] || "",
       });
     } finally {
       botSettings.loading = false;
@@ -2657,6 +2693,15 @@ export function useAdminController() {
         "flowbot.host": v.flowbot_host || "127.0.0.1", "flowbot.port": Number(v.flowbot_port) || 7400,
         "flowbot.tls": !!v.flowbot_tls, "flowbot.debug": !!v.flowbot_debug,
         "sillyGirl.web_chat_public": !!v.web_chat_public,
+        "feishu.enable": !!v.feishu_enable,
+        "feishu.app_id": v.feishu_app_id || "",
+        "feishu.app_secret": v.feishu_app_secret || "",
+        "feishu.verification_token": v.feishu_verification_token || "",
+        "feishu.debug": !!v.feishu_debug,
+        "yyw.enable": !!v.yyw_enable,
+        "yyw.api_base": v.yyw_api_base || "",
+        "yyw.selfid": v.yyw_selfid || "",
+        "yyw.authorization": v.yyw_authorization || "",
       });
       message.success("BOT 配置已保存");
       await refreshBots();
@@ -2679,6 +2724,7 @@ export function useAdminController() {
     if (platform === "qqguild") return "qqguild_enable";
     if (platform === "pagermaid") return "pagermaid_enable";
     if (platform === "flowbot") return "flowbot_enable";
+    if (platform === "yyw") return "yyw_enable";
     return "";
   }
 
@@ -3324,6 +3370,7 @@ export function useAdminController() {
     pluginAuthorizations,
     qinglong,
     qqGuildWebhookURL,
+    feishuWebhookURL,
     realScripts,
     recordOptions,
     refreshBots,

@@ -15,9 +15,9 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/google/uuid"
 	cron "github.com/robfig/cron/v3"
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 func init() {
@@ -212,17 +212,14 @@ func addNodePluginLocked(path, name, class string) error {
 		case NODE:
 			workDir = nodePluginWorkDir(path)
 			if err := ensureNodeSillygirlModule(workDir); err != nil {
-				console.Error("NodeJS sillygirl 模块初始化失败：%v", err)
 				return nil
 			}
 			if err := ensureNodeRuntimeDependencies(workDir); err != nil {
-				console.Error("NodeJS sillygirl 运行时依赖安装失败：%v", err)
 				return nil
 			}
 			var err error
 			bin, err = resolveNodeCommand()
 			if err != nil {
-				console.Error("NodeJS 运行时未找到：%v", err)
 				return nil
 			}
 			if preload, err := ensureNodeRuntimePreload(); err == nil {

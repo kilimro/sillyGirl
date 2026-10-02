@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -94,7 +94,7 @@ func init() {
 		return nil
 	})
 	setAdminPassword(sillyGirl.GetString("password"))
-	name = sillyGirl.GetString("name", "傻妞")
+	name = sillyGirl.GetString("name", "MianPro")
 	// if password == "" {
 	// password = utils.GenUUID()
 	// console.Info("可视化面板临时账号密码：%s %s", name, password)
@@ -259,7 +259,7 @@ func handleAdminLogin(ctx *gin.Context) {
 		ApiError(ctx, http.StatusTooManyRequests, "登录失败次数过多，请稍后再试")
 		return
 	}
-	adminName := strings.TrimSpace(sillyGirl.GetString("name", "傻妞"))
+	adminName := strings.TrimSpace(sillyGirl.GetString("name", "MianPro"))
 	if verifyAdminPassword(auth.Password) && auth.Username == adminName {
 		clearLoginAttempts(ctx, attemptKey)
 		token, err := createAdminJWTSession(ctx, adminName)
@@ -327,21 +327,36 @@ func overviewAdapterStatuses() []map[string]interface{} {
 		{Platform: "qqguild", Label: "QQ 官方频道机器人"},
 		{Platform: "web", Label: "Web Bot"},
 		{Platform: "telegram", Label: "Telegram Bot"},
+		{Platform: "yyw", Label: "YYW 微信"},
+		{Platform: "feishu", Label: "飞书机器人"},
 	}
 	rows := []map[string]interface{}{}
 	for _, item := range platforms {
 		botsID := GetAdapterBotsID(item.Platform)
+		isOnline := len(botsID) > 0
+		if item.Platform == "yyw" {
+			// yyw 是 webhook 被动模式，配置了 api_base 且启用就算在线
+			isOnline = adapterEnabledFor("yyw", AdapterConfigEnabled("yyw"))
+		}
 		rows = append(rows, map[string]interface{}{
 			"platform":   item.Platform,
 			"label":      item.Label,
-			"online":     len(botsID) > 0,
-			"enabled":    AdapterConfigEnabled(item.Platform),
+			"online":     isOnline,
+			"enabled":    adapterEnabledFor(item.Platform, AdapterConfigEnabled(item.Platform)),
 			"manageable": AdapterConfigManageable(item.Platform),
 			"bots_id":    botsID,
 			"count":      len(botsID),
 		})
 	}
 	return rows
+}
+
+func adapterEnabledFor(platform string, enabled bool) bool {
+	if platform == "yyw" {
+		// yyw 需要配置了 api_base 才算启用
+		return enabled && MakeBucket("yyw").GetString("api_base") != ""
+	}
+	return enabled
 }
 
 func overviewIntegrationStatuses() map[string]interface{} {

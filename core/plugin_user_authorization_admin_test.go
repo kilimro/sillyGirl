@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/smallfawn/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/core/common"
 )
 
 func TestAdminUserPluginAuthorizationLifecycle(t *testing.T) {

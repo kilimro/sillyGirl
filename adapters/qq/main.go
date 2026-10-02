@@ -13,10 +13,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/smallfawn/sillyGirl/core"
-	"github.com/smallfawn/sillyGirl/core/logs"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core"
+	"github.com/kilimro/sillyGirl/core/logs"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 var qq = core.MakeBucket("qq")
@@ -220,12 +220,12 @@ func init() {
 			auth := c.GetHeader("Authorization")
 			token := qq.GetString("token")
 			if !validOneBotAuthorization(auth, token) {
-				core.Logs.Warn("OneBot机器人token不正确，小心有人攻击你的傻妞！！！")
+				core.Logs.Warn("OneBot机器人token不正确，小心有人攻击你的MianPro！！！")
 				c.AbortWithStatus(401)
 				return
 			}
 			if token == "" {
-				core.Logs.Warn(`你需要在OneBot机器人配置accessToken以及在傻妞配置对应的参数(set qq token ?)才能保证连接安全，如果不设置将会造成信息泄露和资产损失！！！`)
+				core.Logs.Warn(`你需要在OneBot机器人配置accessToken以及在MianPro配置对应的参数(set qq token ?)才能保证连接安全，如果不设置将会造成信息泄露和资产损失！！！`)
 			}
 			var upGrader = websocket.Upgrader{
 				CheckOrigin: validOneBotOrigin,

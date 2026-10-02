@@ -4,14 +4,14 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/client/httplib"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 func Init() {
 	initLoc()
 	sillyGirl = MakeBucket("sillyGirl")
-	// utils.ReadYaml(utils.ExecPath+"/conf/", &Config, "https://raw.githubusercontent.com/smallfawn/sillyGirl/main/conf/demo_config.yaml")
+	// utils.ReadYaml(utils.ExecPath+"/conf/", &Config, "https://raw.githubusercontent.com/kilimro/sillyGirl/main/conf/demo_config.yaml")
 	initToHandleMessage()
 	cleanupBackendVersionStorageKeys()
 	rememberLatestAppVersion(currentAppVersion(), versionAcceleratedURLs(remoteVersionRawURL)[0])

@@ -39,7 +39,7 @@ SillyGirl 的插件系统基于外部脚本运行时。插件使用 JavaScript/N
   pnpm-lock.yaml
   node_modules/
   python_packages/
-  smallfawn/
+  kilimro/
     normal.js
     sharedTools.js
   local/

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/proto3/srpc"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/proto3/srpc"
+	"github.com/kilimro/sillyGirl/utils"
 	"google.golang.org/grpc/metadata"
 )
 

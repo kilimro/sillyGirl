@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/core/logs"
-	"github.com/smallfawn/sillyGirl/core/storage"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/core/logs"
+	"github.com/kilimro/sillyGirl/core/storage"
+	"github.com/kilimro/sillyGirl/utils"
 )
 
 var total uint64 = 0
@@ -196,6 +196,11 @@ func initToHandleMessage() {
 			isAdmin := s.IsAdmin()
 			uname := s.GetUserName()
 			ctt := s.GetContent()
+			// 内置命令：myuid —— 所有渠道通用，回复当前平台/用户ID/会话ID
+			if ctt == "myuid" || ctt == "我的id" || ctt == "我的ID" {
+				s.Reply(fmt.Sprintf("平台: %s\n用户ID: %s\n会话ID: %s", imType, uid, cid))
+				continue
+			}
 			if !utils.IsZeroOrEmpty(cid) {
 				cname := s.GetChatName()
 				if cname != "" {

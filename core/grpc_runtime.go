@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/smallfawn/sillyGirl/core/common"
-	"github.com/smallfawn/sillyGirl/utils"
+	"github.com/kilimro/sillyGirl/core/common"
+	"github.com/kilimro/sillyGirl/utils"
 	"google.golang.org/grpc/metadata"
 )
 
