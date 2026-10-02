@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.1.9-1677ff)](VERSION)
 [![Go](https://img.shields.io/badge/Go-1.18+-00ADD8?logo=go)](go.mod)
-[![Docker](https://img.shields.io/badge/Docker-pull-2496ED?logo=docker)](https://hub.docker.com/r/kilimro/mianpro)
+[![Docker](https://img.shields.io/badge/Docker-pull-2496ED?logo=docker)](https://hub.docker.com/r/haidada/mianpro)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 [English](README.md) | 中文
@@ -59,7 +59,7 @@ MianPro.exe
 
 ```bash
 # 拉取镜像
-docker pull kilimro/mianpro:latest
+docker pull haidada/mianpro:latest
 
 # 运行
 docker run -d \
@@ -67,7 +67,7 @@ docker run -d \
   -p 8080:8080 \
   -v mianpro-data:/data \
   --restart unless-stopped \
-  kilimro/mianpro:latest
+  haidada/mianpro:latest
 ```
 
 ### Linux 服务器
