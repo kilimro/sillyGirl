@@ -220,7 +220,7 @@ docker run -d --name sillygirl --restart unless-stopped \
   -p 8080:8080 \
   -e SILLYGIRL_DATA_PATH=/data \
   -v "$PWD/data:/data" \
-  kilimro/sillygirl:latest
+  haidada/mianpro:latest
 ```
 
 ### 值编码
