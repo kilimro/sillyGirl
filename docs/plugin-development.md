@@ -959,37 +959,37 @@ console.log(users.status, users.message, users.data && users.data.items);
 
 const code = sc.getCode({
   openid: "用户 openid",
-  appid: "wx1234567890abcdef",
+  appid: "wwww",
 });
 console.log(code.status, code.message, code.data);
 
 const session = sc.getSession({
   openid: "用户 openid",
-  appid: "wx1234567890abcdef",
+  appid: "wwww",
 });
 console.log(session.data && session.data.session);
 
 const refreshed = sc.refreshSession({
   openid: "用户 openid",
-  appid: "wx1234567890abcdef",
+  appid: "wwww",
 });
 console.log(refreshed.data && refreshed.data.expireIn);
 
 const userInfo = sc.getUserInfo({
   openid: "用户 openid",
-  appid: "wx1234567890abcdef",
+  appid: "wwww",
 });
 console.log(userInfo.status, userInfo.message, userInfo.data);
 
 const phone = sc.getPhoneNumber({
   openid: "用户 openid",
-  appid: "wx1234567890abcdef",
+  appid: "wwww",
 });
 console.log(phone.status, phone.message, phone.data);
 
 const oauth = sc.oauth({
   openid: "用户 openid",
-  appid: "wx2f5d8f9715c59d10",
+  appid: "wwww",
   redirect_uri: "https://example.com/callback",
   scope: "snsapi_userinfo",
   state: "STATE",
