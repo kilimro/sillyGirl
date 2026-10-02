@@ -59,7 +59,7 @@ jobs:
         working-directory: frontend
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
-          npm run build
+          npx vite build
 
       - name: Build binaries
         shell: bash
@@ -156,7 +156,7 @@ jobs:
             version="dev-${GITHUB_SHA::7}"
             publish_latest="false"
           fi
-          dockerhub_image="docker.io/kilimro/sillygirl"
+          dockerhub_image="docker.io/kilimro/mianpro"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
           echo "dockerhub_image=${dockerhub_image}" >> "${GITHUB_OUTPUT}"
           {
