@@ -23,6 +23,7 @@ var adminSettingsKeys = []string{
 	"sillyGirl.user_announcement_enable",
 	"sillyGirl.user_announcement",
 	"sillyGirl.user_announcement_format",
+	"sillyGirl.home_iframe_url",
 	"sillyGirl.debug",
 	"sillyGirl.listen_admin",
 	"sillyGirl.recall",

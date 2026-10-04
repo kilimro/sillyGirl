@@ -54,6 +54,24 @@ const announceText = computed(() => {
   return typeof c === 'string' ? c : '';
 });
 
+const announceHtml = computed(() => {
+  const text = announceText.value;
+  if (announcement.value.format === 'html') return text;
+  if (announcement.value.format === 'markdown' || announcement.value.format === 'md') {
+    return text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+      .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+      .replace(/\*(.+?)\*/g, '<i>$1</i>')
+      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
+  }
+  return '';
+});
+
 async function requestJSON<T>(url: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);
   if (!headers.has('Content-Type') && options.body) headers.set('Content-Type', 'application/json');
@@ -251,7 +269,7 @@ onMounted(() => { loadProfile(); loadPlugins(); });
             <!-- 公告 -->
             <Card v-if="announcement.enabled && announceText" :bordered="false" style="margin-top: 16px">
               <template #title><Space><Bell :size="16" />系统公告</Space></template>
-              <div v-if="announcement.format === 'html'" v-html="announceText"></div>
+              <div v-if="announceHtml" v-html="announceHtml"></div>
               <div v-else>{{ announceText }}</div>
             </Card>
           </template>
