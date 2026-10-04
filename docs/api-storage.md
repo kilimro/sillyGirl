@@ -129,7 +129,7 @@ Base URL: `http://host:port/api`
 | `POST` | `/api/admin/message-rules/:kind/:key/deletions` |
 | `GET` | `/api/admin/bots` |
 
-面板集合使用请求体字段 `type: "qinglong" | "daidai" | "smallcat"` 区分具体类型。`GET /api/admin/panels` 一次返回三类面板，不再并发请求 provider 专用接口。
+面板集合使用请求体字段 `type: "qinglong" | "daidai"` 区分具体类型。`GET /api/admin/panels` 一次返回两类面板，不再并发请求 provider 专用接口。
 
 本地插件接口使用文件插件 UUID 作为 `:id`：
 
@@ -149,17 +149,10 @@ Base URL: `http://host:port/api`
 | `POST` | `/api/user/bindings/:platform/deletions` |
 | `GET` | `/api/user/plugins` |
 | `POST` | `/api/user/plugins/:uuid/authorization` |
-| `GET` | `/api/user/plugins/:uuid/smallcat-accounts` |
 | `GET` | `/api/user/plugins/:uuid/form` |
 | `POST` | `/api/user/plugins/:uuid/form-records` |
 | `POST` | `/api/user/plugins/:uuid/form-records/:record_id` |
 | `POST` | `/api/user/plugins/:uuid/form-records/:record_id/deletions` |
-| `GET` | `/api/user/smallcat-panels` |
-| `POST` | `/api/user/smallcat-login-sessions` |
-| `GET` | `/api/user/smallcat-login-sessions/:panel/:uuid` |
-| `POST` | `/api/user/smallcat-login-sessions/:panel/:uuid/confirmations` |
-| `POST` | `/api/user/smallcat-accounts` |
-| `POST` | `/api/user/smallcat-verification-codes` |
 
 ### Public 资源
 
@@ -526,7 +519,7 @@ print(f"Changed: {resp.changed}")
 - 已删除旧接口保持 `404`；
 - `401/404/409/422/500` 使用对应 HTTP 状态；
 - 所有 REST JSON 响应顶层严格包含 `status`、`message`、`data`，且 `status` 只能是布尔值；
-- `GET /api/admin/panels` 一次返回 `qinglong`、`daidai`、`smallcat` 三组集合。
+- `GET /api/admin/panels` 一次返回 `qinglong`、`daidai` 两组集合。
 
 ```bash
 go test ./core -run 'Test.*(REST|Route|HTTP|AdminResource)'

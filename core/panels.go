@@ -17,22 +17,20 @@ type adminPanelList[T any] struct {
 }
 
 type adminPanelsResponse struct {
-	Smallcat adminPanelList[SmallcatPanel] `json:"smallcat"`
 	Qinglong adminPanelList[QinglongPanel] `json:"qinglong"`
 	Daidai   adminPanelList[DaidaiPanel]   `json:"daidai"`
 }
 
 func init() {
 	GinApi(GET, "/api/admin/panels", RequireAuth, func(ctx *gin.Context) {
-		ApiOK(ctx, getAdminPanels(false))
+		ApiOK(ctx, getAdminPanels())
 	})
 	GinApi(POST, "/api/admin/panels", RequireAuth, handleSaveAdminPanel)
 	GinApi(POST, "/api/admin/panels/:id", RequireAuth, handleSaveAdminPanel)
 	GinApi(POST, "/api/admin/panels/:id/deletions", RequireAuth, handleDeleteAdminPanel)
-	GinApi(GET, "/api/admin/panels/:id/accounts", RequireAuth, handleSmallcatPanelAccounts)
 	GinApi(POST, "/api/admin/panel-connection-tests", RequireAuth, handleAdminPanelConnectionTest)
 	GinApi(POST, "/api/admin/panel-status-checks", RequireAuth, func(ctx *gin.Context) {
-		ApiOK(ctx, getAdminPanels(true))
+		ApiOK(ctx, getAdminPanels())
 	})
 }
 
@@ -47,10 +45,8 @@ func handleSaveAdminPanel(ctx *gin.Context) {
 		handleSaveQinglongPanel(ctx)
 	case "daidai":
 		handleSaveDaidaiPanel(ctx)
-	case "smallcat":
-		handleSaveSmallcatPanel(ctx)
 	default:
-		ApiUnprocessable(ctx, "面板类型必须是 qinglong、daidai 或 smallcat")
+		ApiUnprocessable(ctx, "面板类型必须是 qinglong 或 daidai")
 	}
 }
 
@@ -65,10 +61,8 @@ func handleAdminPanelConnectionTest(ctx *gin.Context) {
 		handleQinglongPanelConnectionTest(ctx)
 	case "daidai":
 		handleDaidaiPanelConnectionTest(ctx)
-	case "smallcat":
-		handleSmallcatPanelConnectionTest(ctx)
 	default:
-		ApiUnprocessable(ctx, "面板类型必须是 qinglong、daidai 或 smallcat")
+		ApiUnprocessable(ctx, "面板类型必须是 qinglong 或 daidai")
 	}
 }
 
@@ -86,7 +80,7 @@ func handleDeleteAdminPanel(ctx *gin.Context) {
 		ApiFail(ctx, "缺少面板 ID")
 		return
 	}
-	deleted := deleteQinglongPanel(id) || deleteDaidaiPanel(id) || deleteSmallcatPanel(id)
+	deleted := deleteQinglongPanel(id) || deleteDaidaiPanel(id)
 	if !deleted {
 		ApiNotFound(ctx, "面板不存在")
 		return
@@ -131,32 +125,13 @@ func adminPanelKindByID(id string) string {
 			return "daidai"
 		}
 	}
-	if storedSmallcatPanelByID(id) != nil {
-		return "smallcat"
-	}
 	return ""
 }
 
-func getAdminPanels(refreshSmallcat bool) adminPanelsResponse {
-	smallcatPanels := getSmallcatPanels()
-	if refreshSmallcat {
-		refreshSmallcatPanelsStatus(smallcatPanels)
-	}
+func getAdminPanels() adminPanelsResponse {
 	qinglongPanels := getQinglongPanels()
 	daidaiPanels := getDaidaiPanels()
-	return buildAdminPanelsResponse(smallcatPanels, qinglongPanels, daidaiPanels)
-}
-
-func buildAdminPanelsResponse(
-	smallcatPanels []SmallcatPanel,
-	qinglongPanels []QinglongPanel,
-	daidaiPanels []DaidaiPanel,
-) adminPanelsResponse {
 	return adminPanelsResponse{
-		Smallcat: adminPanelList[SmallcatPanel]{
-			List:  redactSmallcatPanels(smallcatPanels),
-			Total: len(smallcatPanels),
-		},
 		Qinglong: adminPanelList[QinglongPanel]{
 			List:  qinglongPanels,
 			Total: len(qinglongPanels),

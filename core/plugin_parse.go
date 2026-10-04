@@ -15,9 +15,8 @@ var (
 	optionalRuleParamPattern = regexp.MustCompile(`\[([^\s\[\]]+)\]`)
 	multiSpacePattern        = regexp.MustCompile("\x20{2,}")
 	classTokenPattern        = regexp.MustCompile(`\S+`)
-	smallCatCallPattern      = regexp.MustCompile(`\b(?:new\s+)?SmallCat\s*[.(]`)
-	pluginFormCallPattern    = regexp.MustCompile(`\b(?:new\s+)?plugin\s*\.\s*Form\s*\(`)
-	userFormCallPattern      = regexp.MustCompile(`\b(?:new\s+)?user\s*\.\s*Form\s*\(`)
+	pluginFormCallPattern     = regexp.MustCompile(`\b(?:new\s+)?plugin\s*\.\s*Form\s*\(`)
+	userFormCallPattern       = regexp.MustCompile(`\b(?:new\s+)?user\s*\.\s*Form\s*\(`)
 )
 
 func pluginParse(script string, uuid string) (*common.Function, []func()) {
@@ -39,7 +38,6 @@ func pluginParse(script string, uuid string) (*common.Function, []func()) {
 	var crons = map[string]string{}
 	var hasForm bool
 	var hasUserForm bool
-	var usesSmallCat = smallCatCallPattern.MatchString(script)
 	var carry bool
 	var classes = []string{}
 	ks := map[string]bool{}
@@ -165,7 +163,6 @@ func pluginParse(script string, uuid string) (*common.Function, []func()) {
 		Running:      statusEnabled && (onStart || web),
 		HasForm:      hasForm,
 		HasUserForm:  hasUserForm,
-		UsesSmallCat: usesSmallCat,
 		Carry:        carry,
 		Classes:      classes,
 	}, cbs

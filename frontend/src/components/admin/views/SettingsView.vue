@@ -93,6 +93,19 @@ const {
           name="settings-api-key"
           v-model:value="settings.form.api_key"
       /></Form.Item>
+      <Typography.Title :level="5">首页内容</Typography.Title>
+      <Form.Item
+        label="首页 iframe 地址"
+        html-for="settings-home-iframe"
+        extra="首页 / 会嵌入这个网站；留空则显示默认介绍首页。默认 https://work.920pdd.com/"
+      >
+        <Input
+          id="settings-home-iframe"
+          name="settings-home-iframe"
+          v-model:value="settings.form.home_iframe_url"
+          placeholder="https://work.920pdd.com/"
+        />
+      </Form.Item>
       <Typography.Title :level="5">普通用户公告</Typography.Title>
       <Form.Item
         label="在 user 页面显示公告"
