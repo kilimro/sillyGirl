@@ -2882,6 +2882,7 @@ export function useAdminController() {
         data["sillyGirl.user_announcement_enable"] === true ||
         data["sillyGirl.user_announcement_enable"] === "true",
       user_announcement: data["sillyGirl.user_announcement"] || "",
+      home_iframe_url: data["sillyGirl.home_iframe_url"] || "",
       user_announcement_format: ["text", "markdown", "html"].includes(
         String(data["sillyGirl.user_announcement_format"] || ""),
       )
@@ -2909,6 +2910,7 @@ export function useAdminController() {
       "sillyGirl.api_key": v.api_key || "",
       "sillyGirl.user_announcement_enable": !!v.user_announcement_enable,
       "sillyGirl.user_announcement": v.user_announcement || "",
+      "sillyGirl.home_iframe_url": v.home_iframe_url || "",
       "sillyGirl.user_announcement_format":
         v.user_announcement_format || "text",
       "sillyGirl.debug": !!v.debug,
