@@ -305,7 +305,6 @@ export function useAdminController() {
   const overviewIntegrations = computed(() => {
     const defaults = [
       { key: "qinglong", label: "青龙容器" },
-      { key: "smallcat", label: "smallcat" },
       { key: "daidai", label: "呆呆容器" },
     ];
     const rows = user.value?.integrations || {};
