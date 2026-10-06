@@ -693,11 +693,11 @@ canvas {
 .plugin-market-card {
   display: grid;
   min-width: 0;
-  grid-template-columns: 40px minmax(0, 1fr) auto;
-  gap: 8px;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: start;
   min-height: 92px;
-  padding: 10px;
+  padding: 12px;
   background: #ffffff;
   border: 1px solid #e6eaf0;
   border-radius: 8px;
@@ -725,15 +725,16 @@ canvas {
 .plugin-card-icon {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   overflow: hidden;
   color: #111827;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background: #f5f7fa;
+  border: none;
+  border-radius: 50%;
   font-weight: 700;
+  font-size: 18px;
   cursor: pointer;
   transition:
     border-color 0.16s ease,
@@ -768,6 +769,14 @@ canvas {
   min-width: 0;
 }
 
+.plugin-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+}
+
 .plugin-card-title {
   appearance: none;
   max-width: 100%;
@@ -788,8 +797,6 @@ canvas {
 .plugin-card-title:focus-visible {
   color: #1677ff;
   outline: 0;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .plugin-card-cron-badge.ant-tag {
@@ -797,6 +804,16 @@ canvas {
   color: #15803d;
   background: #dcfce7;
   border-color: #86efac;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.official-tag.ant-tag {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 7px;
   font-size: 11px;
   line-height: 18px;
 }

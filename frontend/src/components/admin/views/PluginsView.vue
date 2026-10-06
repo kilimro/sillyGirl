@@ -10,6 +10,7 @@ import {
   Save,
   Search,
   Settings,
+  ShieldCheck,
   Sun,
   Trash2,
   Wand2,
@@ -91,6 +92,12 @@ const {
   togglePluginStatus,
   user,
 } = useAdminViewContext();
+
+function isOfficialPlugin(record: any): boolean {
+  if (!record) return false;
+  const str = JSON.stringify(record).toLowerCase();
+  return str.includes("kilimro/sillygirl_plugins");
+}
 </script>
 
 <template>
@@ -177,25 +184,18 @@ const {
               >
                 {{ record.title || record.id }}
               </button>
+            </div>
+            <div class="plugin-card-tags">
               <Tag
                 v-if="pluginHasSchedule(record)"
                 class="plugin-card-cron-badge"
                 >定时</Tag
               >
               <Tag v-if="record.module" color="purple">依赖模块</Tag>
-            </div>
-            <div class="plugin-card-meta">
-              <Tag>{{
-                record.latest_version ||
-                record.version ||
-                record.current_version ||
-                "-"
-              }}</Tag>
-              <Tag color="cyan">{{
-                pluginClassTags(record).join(" / ") || "-"
-              }}</Tag>
-              <Tag color="gold">{{ pluginTriggerText(record) || "-" }}</Tag>
-              <Tag color="blue">{{ record.author || "-" }}</Tag>
+              <Tag v-if="isOfficialPlugin(record)" color="gold" class="official-tag">
+                <ShieldCheck :size="12" />官方
+              </Tag>
+              <Tag v-if="!isOfficialPlugin(record)" color="blue">{{ record.author || "-" }}</Tag>
             </div>
           </div>
           <div class="plugin-card-actions">
@@ -562,8 +562,7 @@ const {
           <div class="plugin-user-open-copy">
             <Typography.Text strong>是否开放为普通用户</Typography.Text>
             <Typography.Text type="secondary">
-              开启后普通用户可在 Home 页面看到该插件，并自行决定是否授权其读取
-              SmallCat 账号列表。
+              开启后普通用户可在 Home 页面看到该插件。
             </Typography.Text>
           </div>
           <Switch

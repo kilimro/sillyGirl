@@ -142,7 +142,7 @@ onUnmounted(() => { if (feishuRegTimer) clearInterval(feishuRegTimer); });
             <span class="bot-card-avatar" v-html="platformIcon(record.platform)" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;"></span>
             <div class="bot-card-heading">
               <strong>{{ record.label }}</strong>
-              <span>{{ record.platform }}</span>
+              <span>{{ record.platform === 'yyw' ? 'MianPro 专用' : record.platform }}</span>
             </div>
             <div class="bot-card-actions">
               <template v-if="record.manageable !== false">
@@ -236,7 +236,7 @@ onUnmounted(() => { if (feishuRegTimer) clearInterval(feishuRegTimer); });
                 record.bots_id?.length ? record.bots_id.join(", ") : "-"
               }}</Typography.Text>
             </div>
-            <div v-if="record.manageable === false">
+            <div>
               <span>类型</span><Tag color="blue">内置 BOT</Tag>
             </div>
           </div>

@@ -15,6 +15,8 @@ import Typography from 'ant-design-vue/es/typography';
 import message from 'ant-design-vue/es/message';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import { Bell, Link2, LogOut, Plug, QrCode, User as UserIcon } from 'lucide-vue-next';
+import Modal from 'ant-design-vue/es/modal';
+import Spin from 'ant-design-vue/es/spin';
 
 type ApiEnvelope<T> = { status: boolean; message: string; data: T };
 type PublicUser = { id: string; username: string; nickname: string; created_at: number };
@@ -38,6 +40,14 @@ const qqValue = ref('');
 const tgValue = ref('');
 const savingQQ = ref(false);
 const savingTG = ref(false);
+
+// 插件表单 Modal
+const pluginModalOpen = ref(false);
+const pluginModalLoading = ref(false);
+const pluginModalSaving = ref(false);
+const currentPlugin = ref<OpenPlugin | null>(null);
+const pluginFormSchema = ref<any>(null);
+const pluginFormData = ref<Record<string, any>>({});
 
 const userInitial = computed(() => {
   const name = currentUser.value?.nickname || currentUser.value?.username || 'U';
@@ -126,6 +136,44 @@ async function loadProfile() {
 async function loadPlugins() {
   try { openPlugins.value = await requestJSON<OpenPlugin[]>('/api/public/plugins'); }
   catch (_) { openPlugins.value = []; }
+}
+
+async function openPluginForm(p: OpenPlugin) {
+  currentPlugin.value = p;
+  pluginModalOpen.value = true;
+  pluginModalLoading.value = true;
+  pluginFormSchema.value = null;
+  pluginFormData.value = {};
+  try {
+    const data = await requestJSON<any>(`/api/user/plugins/${p.id}/form`);
+    pluginFormSchema.value = data?.schema || data;
+    // 填充默认值
+    const props = pluginFormSchema.value?.properties || {};
+    for (const key of Object.keys(props)) {
+      if (props[key].default !== undefined) pluginFormData.value[key] = props[key].default;
+    }
+  } catch (e) {
+    message.error(e instanceof Error ? e.message : '加载表单失败');
+  } finally {
+    pluginModalLoading.value = false;
+  }
+}
+
+async function savePluginForm() {
+  if (!currentPlugin.value) return;
+  pluginModalSaving.value = true;
+  try {
+    await requestJSON(`/api/user/plugins/${currentPlugin.value.id}/form-records`, {
+      method: 'POST',
+      body: JSON.stringify({ values: pluginFormData.value }),
+    });
+    message.success('提交成功');
+    pluginModalOpen.value = false;
+  } catch (e) {
+    message.error(e instanceof Error ? e.message : '提交失败');
+  } finally {
+    pluginModalSaving.value = false;
+  }
 }
 
 async function saveQQ() {
@@ -254,8 +302,9 @@ onMounted(() => { loadProfile(); loadPlugins(); });
             <!-- 开放服务 -->
             <Card :bordered="false" style="margin-top: 16px" :title="`开放服务 (${openPlugins.length})`">
               <div v-if="openPlugins.length" class="plugin-list">
-                <div v-for="p in openPlugins" :key="p.id" class="plugin-item">
-                  <Plug :size="16" class="p-icon" />
+                <div v-for="p in openPlugins" :key="p.id" class="plugin-item" @click="openPluginForm(p)">
+                  <img v-if="p.icon" :src="p.icon" class="p-icon-img" alt="" />
+                  <Plug v-else :size="16" class="p-icon" />
                   <div class="p-body">
                     <Typography.Text strong>{{ p.title || p.id }}</Typography.Text>
                     <Typography.Text type="secondary" class="p-desc">{{ p.desc || '暂无介绍' }}</Typography.Text>
@@ -275,6 +324,44 @@ onMounted(() => { loadProfile(); loadPlugins(); });
           </template>
         </main>
       </div>
+
+      <!-- 插件表单 Modal -->
+      <Modal
+        v-model:open="pluginModalOpen"
+        :title="currentPlugin?.title || '插件设置'"
+        width="560px"
+        :confirm-loading="pluginModalSaving"
+        ok-text="提交"
+        cancel-text="取消"
+        @ok="savePluginForm"
+      >
+        <Spin :spinning="pluginModalLoading">
+          <Form layout="vertical">
+            <template v-if="pluginFormSchema?.properties">
+              <Form.Item
+                v-for="key in pluginFormSchema.propertyOrder || Object.keys(pluginFormSchema.properties)"
+                :key="key"
+                :label="pluginFormSchema.properties[key].title || key"
+                :help="pluginFormSchema.properties[key].description"
+              >
+                <Input.TextArea
+                  v-if="pluginFormSchema.properties[key]['ui:widget'] === 'textarea'"
+                  v-model:value="pluginFormData[key]"
+                  :rows="4"
+                  :placeholder="pluginFormSchema.properties[key].title || key"
+                />
+                <Input
+                  v-else
+                  v-model:value="pluginFormData[key]"
+                  :type="pluginFormSchema.properties[key].type === 'boolean' ? 'checkbox' : 'text'"
+                  :placeholder="pluginFormSchema.properties[key].title || key"
+                />
+              </Form.Item>
+            </template>
+            <Typography.Text v-else type="secondary">该插件暂无配置项</Typography.Text>
+          </Form>
+        </Spin>
+      </Modal>
     </AntApp>
   </ConfigProvider>
 </template>
@@ -306,8 +393,10 @@ onMounted(() => { loadProfile(); loadPlugins(); });
 .divider { height: 1px; margin: 8px 0; background: #f0f0f0; }
 
 .plugin-list { display: grid; gap: 10px; }
-.plugin-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8fafc; border-radius: 8px; }
+.plugin-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8fafc; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.plugin-item:hover { background: #eff6ff; }
 .p-icon { color: #1677ff; flex-shrink: 0; }
+.p-icon-img { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; object-fit: cover; }
 .p-body { flex: 1; min-width: 0; }
 .p-desc { font-size: 12px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>
