@@ -7,16 +7,13 @@ import type {
 } from "../../types";
 import { apiData, type ApiEnvelope } from "./adminApi";
 
-export function useNormalUsersAdmin(
-  smallcatOpenids: (record?: AdminUserRow) => string[],
-) {
+export function useNormalUsersAdmin() {
   type NormalUserForm = {
     username: string;
     password: string;
     nickname: string;
     qq: string;
     telegram: string;
-    smallcat_openids: string[];
     disabled: boolean;
   };
 
@@ -26,7 +23,6 @@ export function useNormalUsersAdmin(
     nickname: "",
     qq: "",
     telegram: "",
-    smallcat_openids: [],
     disabled: false,
   });
 
@@ -71,7 +67,6 @@ export function useNormalUsersAdmin(
           nickname: row.nickname || "",
           qq: row.bindings?.qq || "",
           telegram: row.bindings?.telegram || "",
-          smallcat_openids: smallcatOpenids(row),
           disabled: !!row.disabled,
         }
       : emptyNormalUserForm();
@@ -96,13 +91,6 @@ export function useNormalUsersAdmin(
         nickname: form.nickname.trim(),
         qq: form.qq.trim(),
         telegram: form.telegram.trim(),
-        smallcat_openids: [
-          ...new Set(
-            form.smallcat_openids
-              .map((item) => String(item).trim())
-              .filter(Boolean),
-          ),
-        ],
         disabled: !!form.disabled,
       };
       if (normalUsers.editing) {

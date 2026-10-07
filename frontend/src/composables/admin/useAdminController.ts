@@ -54,19 +54,16 @@ import { usePanelsAdmin, type AdminPanelsResponse } from "./usePanelsAdmin";
 import { useStorageAdmin } from "./useStorageAdmin";
 import { useTasksAdmin } from "./useTasksAdmin";
 import { pluginConfigFieldVisible as resolvePluginConfigFieldVisible } from "./visibleWhen";
-
 export function useAdminController() {
   type WebChatMessage = {
     t?: string;
     c?: string;
     m?: string[];
   };
-
   type WebChatEntry = WebChatMessage & {
     id: number;
     own?: boolean;
   };
-
   type PageKey =
     | "welcome"
     | "bots"
@@ -79,10 +76,8 @@ export function useAdminController() {
     | "containers"
     | "masters"
     | "settings";
-
-  type ContainerKind = "qinglong" | "daidai" | "smallcat";
+  type ContainerKind = "qinglong" | "daidai";
   type MessageToolKind = "carry" | "reply" | "messages";
-
   const validPages: PageKey[] = [
     "welcome",
     "bots",
@@ -99,14 +94,12 @@ export function useAdminController() {
   const legacyContainerPages: ContainerKind[] = [
     "qinglong",
     "daidai",
-    "smallcat",
   ];
   const legacyMessageToolPages: MessageToolKind[] = [
     "carry",
     "reply",
     "messages",
   ];
-
   const user = ref<CurrentUser | null>(null);
   const booting = ref(true);
   const page = ref<PageKey>(pageFromPath());
@@ -116,7 +109,6 @@ export function useAdminController() {
   const loginModel = reactive({ username: "", password: "" });
   const setupRequired = ref(false);
   const setupModel = reactive({ username: "", password: "", confirm: "" });
-
   const webChatMessagesEl = ref<HTMLElement | null>(null);
   const webChat = reactive({
     open: false,
@@ -131,7 +123,6 @@ export function useAdminController() {
   let webChatMessageID = 0;
   let webChatPollGeneration = 0;
   let webChatPollController: AbortController | null = null;
-
   function loadWebChatRid() {
     const key = "sillygirl_web_chat_rid";
     const current = sessionStorage.getItem(key)?.trim();
@@ -144,18 +135,15 @@ export function useAdminController() {
     sessionStorage.setItem(key, rid);
     return rid;
   }
-
   function webChatRows(res: ApiEnvelope<WebChatMessage[]>) {
     const rows = apiData(res);
     return Array.isArray(rows) ? rows : [];
   }
-
   async function scrollWebChatToBottom() {
     await nextTick();
     const el = webChatMessagesEl.value;
     if (el) el.scrollTop = el.scrollHeight;
   }
-
   function appendWebChatMessages(rows: WebChatMessage[], own = false) {
     for (const row of rows) {
       const content = `${row?.c || ""}`;
@@ -175,7 +163,6 @@ export function useAdminController() {
     }
     void scrollWebChatToBottom();
   }
-
   async function pollWebChat(generation: number) {
     if (!webChat.open || !user.value || generation !== webChatPollGeneration)
       return;
@@ -204,7 +191,6 @@ export function useAdminController() {
       void pollWebChat(generation);
     }
   }
-
   function toggleWebChat() {
     webChatPollController?.abort();
     webChatPollController = null;
@@ -221,7 +207,6 @@ export function useAdminController() {
       void pollWebChat(webChatPollGeneration);
     }
   }
-
   async function sendWebChat() {
     const content = webChat.input.trim();
     if (!content || webChat.sending) return;
@@ -241,7 +226,6 @@ export function useAdminController() {
       void scrollWebChatToBottom();
     }
   }
-
   function stopWebChat() {
     webChatPollController?.abort();
     webChatPollController = null;
@@ -249,13 +233,11 @@ export function useAdminController() {
     webChat.polling = false;
     webChatPollGeneration += 1;
   }
-
   type AuthResponse = {
     status: string;
     token?: string;
     expiresIn?: number;
   };
-
   const scripts = computed(() => user.value?.plugins || []);
   const realScripts = computed(() =>
     scripts.value.filter(
@@ -283,6 +265,7 @@ export function useAdminController() {
       { platform: "web", label: "Web Bot" },
       { platform: "telegram", label: "Telegram Bot" },
       { platform: "yyw", label: "YYW 微信" },
+      { platform: "gewe", label: "GeWe 微信" },
       { platform: "flowbot", label: "FlowBot 微信" },
       { platform: "feishu", label: "飞书机器人" },
     ];
@@ -332,7 +315,6 @@ export function useAdminController() {
     total: user.value?.user_stats?.total || 0,
     today: user.value?.user_stats?.today || 0,
   }));
-
   type SystemUpdateResult = {
     mode?: string;
     repo?: string;
@@ -342,7 +324,6 @@ export function useAdminController() {
     asset?: string;
     output?: string;
   };
-
   type SystemUpdateSnapshot = {
     id?: string;
     running?: boolean;
@@ -352,7 +333,6 @@ export function useAdminController() {
     error?: string;
     result?: SystemUpdateResult | null;
   };
-
   const systemUpdate = reactive({
     open: false,
     running: false,
@@ -756,7 +736,7 @@ export function useAdminController() {
     saveNormalUser,
     saveNormalUserPluginAuthorization,
     removeNormalUser,
-  } = useNormalUsersAdmin(smallcatOpenids);
+  } = useNormalUsersAdmin();
 
   const {
     isPluginCronTask,
@@ -784,13 +764,6 @@ export function useAdminController() {
     testQinglongPanel,
     saveQinglongPanel,
     removeQinglongPanel,
-    smallcat,
-    smallcatQuotaText,
-    openSmallcatPanel,
-    testSmallcatPanel,
-    saveSmallcatPanel,
-    removeSmallcatPanel,
-    showSmallcatOpenids,
     daidai,
     applyAdminPanels,
     openDaidaiPanel,
@@ -1300,10 +1273,7 @@ export function useAdminController() {
   }
 
   function pluginCanOpen(row: PluginInfo) {
-    return (
-      pluginInstalled(row) &&
-      (row.uses_smallcat === true || row.has_user_form === true)
-    );
+    return pluginInstalled(row) && row.has_user_form === true;
   }
 
   function pluginCanConfigure(row: PluginInfo) {
@@ -2128,21 +2098,18 @@ export function useAdminController() {
     if (Array.isArray(prop?.enum)) return "enum";
     return prop?.type || "string";
   }
-  type PluginPanelKind = "smallcat" | "qinglong" | "daidai";
+  type PluginPanelKind = "qinglong" | "daidai";
   function pluginPanelKind(field: {
     key: string;
     prop?: any;
   }): PluginPanelKind | null {
     const widget = String(field.prop?.["ui:widget"] || "").toLowerCase();
-    if (widget === "smallcat-panel") return "smallcat";
     if (widget === "qinglong-panel") return "qinglong";
     if (widget === "daidai-panel") return "daidai";
     const key = String(field.key || "")
       .toLowerCase()
       .replace(/[^a-z0-9]/g, "");
     const title = String(field.prop?.title || "");
-    if (key === "smallcatid" || /smallcat.*编号/i.test(title))
-      return "smallcat";
     if (key === "qinglongid" || key === "qlid" || /青龙.*编号/.test(title))
       return "qinglong";
     if (key === "daidaiid" || key === "ddid" || /呆呆.*编号/.test(title))
@@ -2152,8 +2119,6 @@ export function useAdminController() {
   function pluginPanelChoices(field: { key: string; prop?: any }) {
     const kind = pluginPanelKind(field);
     let available = 0;
-    if (kind === "smallcat")
-      available = Math.max(smallcat.total, smallcat.rows.length);
     if (kind === "qinglong")
       available = Math.max(qinglong.total, qinglong.rows.length);
     if (kind === "daidai")
@@ -2165,7 +2130,6 @@ export function useAdminController() {
   }
   function pluginPanelEmptyText(field: { key: string; prop?: any }) {
     const labels: Record<PluginPanelKind, string> = {
-      smallcat: "SmallCat",
       qinglong: "青龙",
       daidai: "呆呆",
     };
@@ -2278,6 +2242,7 @@ export function useAdminController() {
     yyw_api_base: string;
     yyw_selfid: string;
     yyw_authorization: string;
+    gewe_enable: boolean; gewe_token: string; gewe_app_id: string; gewe_api_base: string; gewe_self_wxid: string; gewe_webhook: string;
   };
 
   type BotSettingsPlatform =
@@ -2287,7 +2252,7 @@ export function useAdminController() {
     | "dingtalk"
     | "qqguild"
     | "web"
-    | "pagermaid" | "flowbot" | "feishu" | "yyw";
+    | "pagermaid" | "flowbot" | "feishu" | "yyw" | "gewe";
 
   type ClawbotLoginStart = {
     session: string;
@@ -2349,6 +2314,7 @@ export function useAdminController() {
       yyw_api_base: "",
       yyw_selfid: "",
       yyw_authorization: "",
+      gewe_enable: false, gewe_token: "", gewe_app_id: "", gewe_api_base: "https://api.geweapi.com", gewe_self_wxid: "", gewe_webhook: "",
     } as BotSettingsForm,
   });
   const botSettingsModal = reactive({
@@ -2405,7 +2371,6 @@ export function useAdminController() {
         const kind = pluginPanelKind({ key, prop });
         if (kind) panelKinds.add(kind);
       }
-      if (pluginCanOpen(row)) panelKinds.add("smallcat");
       if (panelKinds.size > 0) applyAdminPanels(resource.panels);
       const selected = config || {
         uuid: row.id,
@@ -2632,6 +2597,8 @@ export function useAdminController() {
         yyw_api_base: data["yyw.api_base"] || "",
         yyw_selfid: data["yyw.selfid"] || "",
         yyw_authorization: data["yyw.authorization"] || "",
+        gewe_enable: boolSetting(data["gewe.enable"]), gewe_token: data["gewe.token"] || "", gewe_app_id: data["gewe.app_id"] || "",
+        gewe_api_base: data["gewe.api_base"] || "https://api.geweapi.com", gewe_self_wxid: data["gewe.self_wxid"] || "", gewe_webhook: data["gewe.callback_url"] || (typeof window !== "undefined" ? window.location.origin : "") + "/api/gewe/webhook",
       });
     } finally {
       botSettings.loading = false;
@@ -2701,6 +2668,8 @@ export function useAdminController() {
         "yyw.api_base": v.yyw_api_base || "",
         "yyw.selfid": v.yyw_selfid || "",
         "yyw.authorization": v.yyw_authorization || "",
+        "gewe.enable": !!v.gewe_enable, "gewe.token": v.gewe_token || "", "gewe.app_id": v.gewe_app_id || "",
+        "gewe.api_base": v.gewe_api_base || "https://api.geweapi.com", "gewe.self_wxid": v.gewe_self_wxid || "", "gewe.callback_url": v.gewe_webhook || "",
       });
       message.success("BOT 配置已保存");
       await refreshBots();
@@ -2724,6 +2693,7 @@ export function useAdminController() {
     if (platform === "pagermaid") return "pagermaid_enable";
     if (platform === "flowbot") return "flowbot_enable";
     if (platform === "yyw") return "yyw_enable";
+    if (platform === "gewe") return "gewe_enable";
     return "";
   }
 
@@ -2794,9 +2764,9 @@ export function useAdminController() {
     { label: "Redis", value: "redis" },
   ];
   const announcementFormatOptions = [
+    { label: "Markdown（推荐）", value: "markdown" },
     { label: "纯文本", value: "text" },
-    { label: "Markdown", value: "markdown" },
-    { label: "HTML", value: "html" },
+    { label: "HTML（自动过滤）", value: "html" },
   ];
   function uniqueSettingOptions(values: string[]) {
     return Array.from(
@@ -2886,7 +2856,7 @@ export function useAdminController() {
         String(data["sillyGirl.user_announcement_format"] || ""),
       )
         ? data["sillyGirl.user_announcement_format"]
-        : "text",
+        : "markdown",
       debug:
         data["sillyGirl.debug"] === true || data["sillyGirl.debug"] === "true",
       listen_admin:
@@ -3237,16 +3207,6 @@ export function useAdminController() {
       label,
     }));
   }
-  function smallcatOpenids(record?: AdminUserRow) {
-    const rows = [] as string[];
-    if (record?.bindings?.smallcat_openid)
-      rows.push(record.bindings.smallcat_openid);
-    for (const item of record?.bindings?.smallcat_openids || []) {
-      if (item) rows.push(item);
-    }
-    return Array.from(new Set(rows.map((item) => item.trim()).filter(Boolean)));
-  }
-
   return {
     VNodes,
     addPluginSource,
@@ -3336,7 +3296,6 @@ export function useAdminController() {
     openPluginSourceManager,
     openQinglongPanel,
     openReply,
-    openSmallcatPanel,
     openTask,
     openUninstallPluginModal,
     optionMap,
@@ -3385,7 +3344,6 @@ export function useAdminController() {
     removeQinglongPanel,
     removeReply,
     removeSettingsOption,
-    removeSmallcatPanel,
     removeStorageBucket,
     removeTask,
     replies,
@@ -3403,7 +3361,6 @@ export function useAdminController() {
     saveQinglongPanel,
     saveReply,
     saveSettings,
-    saveSmallcatPanel,
     saveStorageRow,
     saveTask,
     schemaFields,
@@ -3419,10 +3376,6 @@ export function useAdminController() {
     setupAdmin,
     setupModel,
     setupRequired,
-    showSmallcatOpenids,
-    smallcat,
-    smallcatOpenids,
-    smallcatQuotaText,
     startClawbotLogin,
     startOnlineUpdate,
     storageBackendOptions,
@@ -3434,7 +3387,6 @@ export function useAdminController() {
     tasks,
     testDaidaiPanel,
     testQinglongPanel,
-    testSmallcatPanel,
     togglePluginEditorTheme,
     togglePluginStatus,
     toggleTaskEnabled,

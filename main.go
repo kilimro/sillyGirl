@@ -13,6 +13,7 @@ import (
 	_ "github.com/kilimro/sillyGirl/adapters/dingtalk"
 	_ "github.com/kilimro/sillyGirl/adapters/feishu"
 	_ "github.com/kilimro/sillyGirl/adapters/flowbot"
+	_ "github.com/kilimro/sillyGirl/adapters/gewe"
 	_ "github.com/kilimro/sillyGirl/adapters/pagermaid"
 	_ "github.com/kilimro/sillyGirl/adapters/qq"
 	_ "github.com/kilimro/sillyGirl/adapters/qqguild"

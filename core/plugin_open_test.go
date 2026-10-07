@@ -35,7 +35,7 @@ func TestLocalPrivatePluginsExcludesRemoteAndNonScriptFunctions(t *testing.T) {
 
 func TestOpenPluginRecordsOnlyReturnsEnabledOpenScripts(t *testing.T) {
 	plugins := []*common.Function{
-		{UUID: "open", Title: "开放插件", Type: NODE, Open: true, UsesSmallCat: true, Version: "v1.0.0", Dependencies: []string{"ipp"}},
+		{UUID: "open", Title: "开放插件", Type: NODE, Open: true, HasUserForm: true, Version: "v1.0.0", Dependencies: []string{"ipp"}},
 		{UUID: "no-smallcat", Title: "普通插件", Type: NODE, Open: true},
 		{UUID: "closed", Title: "未开放", Type: NODE},
 		{UUID: "status-off", Title: "已关闭", Type: PYTHON, Open: true, Status: pluginStatusValue(false)},

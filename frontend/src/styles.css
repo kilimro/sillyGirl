@@ -769,6 +769,18 @@ canvas {
   min-width: 0;
 }
 
+.plugin-card-desc {
+  min-width: 0;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .plugin-card-tags {
   display: flex;
   flex-wrap: wrap;

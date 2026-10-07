@@ -322,6 +322,7 @@ func overviewAdapterStatuses() []map[string]interface{} {
 		{Platform: "clawbot", Label: "微信 ClawBot"},
 		{Platform: "dingtalk", Label: "钉钉机器人"},
 		{Platform: "flowbot", Label: "FlowBot 微信"},
+		{Platform: "gewe", Label: "GeWe 微信"},
 		{Platform: "pagermaid", Label: "Pagermaid"},
 		{Platform: "qq", Label: "QQ"},
 		{Platform: "qqguild", Label: "QQ 官方频道机器人"},
@@ -337,6 +338,10 @@ func overviewAdapterStatuses() []map[string]interface{} {
 		if item.Platform == "yyw" {
 			// yyw 是 webhook 被动模式，配置了 api_base 且启用就算在线
 			isOnline = adapterEnabledFor("yyw", AdapterConfigEnabled("yyw"))
+		}
+		if item.Platform == "gewe" {
+			// gewe 是 webhook 被动模式，配置了 token 且启用就算在线
+			isOnline = adapterEnabledFor("gewe", AdapterConfigEnabled("gewe"))
 		}
 		rows = append(rows, map[string]interface{}{
 			"platform":   item.Platform,
@@ -355,6 +360,10 @@ func adapterEnabledFor(platform string, enabled bool) bool {
 	if platform == "yyw" {
 		// yyw 需要配置了 api_base 才算启用
 		return enabled && MakeBucket("yyw").GetString("api_base") != ""
+	}
+	if platform == "gewe" {
+		// gewe 需要配置了 token 才算启用
+		return enabled && MakeBucket("gewe").GetString("token") != ""
 	}
 	return enabled
 }

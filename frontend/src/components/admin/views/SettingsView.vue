@@ -128,14 +128,14 @@ const {
       <Form.Item
         label="公告内容"
         html-for="settings-announcement-content"
-        extra="开启后会显示在普通用户 /user 页面顶部；纯文本保留换行，Markdown 支持常用标题/列表/链接/加粗/代码，HTML 会按原样渲染。"
+        extra="开启后会显示在普通用户 /user 页面顶部。推荐使用 Markdown（支持常用标题/列表/链接/加粗/代码）；HTML 模式会自动过滤危险标签与脚本；纯文本保留换行。"
       >
         <Input.TextArea
           id="settings-announcement-content"
           name="settings-announcement-content"
           v-model:value="settings.form.user_announcement"
           :rows="6"
-          placeholder="请输入要展示给普通用户的公告，支持纯文本 / Markdown / HTML"
+          placeholder="请输入要展示给普通用户的公告，推荐使用 Markdown，也支持纯文本 / HTML"
         />
       </Form.Item>
       <Form.Item label="自动撤回正则" html-for="settings-recall"

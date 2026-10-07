@@ -13,6 +13,7 @@ import Space from 'ant-design-vue/es/space';
 import Tag from 'ant-design-vue/es/tag';
 import Typography from 'ant-design-vue/es/typography';
 import message from 'ant-design-vue/es/message';
+import AppBrand from './components/common/AppBrand.vue';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import { Bell, Link2, LogOut, Plug, QrCode, User as UserIcon } from 'lucide-vue-next';
 import Modal from 'ant-design-vue/es/modal';
@@ -59,16 +60,67 @@ const createdDate = computed(() => {
   return new Date(currentUser.value.created_at * 1000).toLocaleDateString('zh-CN');
 });
 
+// 公告 HTML 白名单清洗：只放行安全标签/属性，剥除脚本、事件属性与危险协议
+const announceAllowedTags = new Set([
+  'P','BR','B','STRONG','I','EM','U','S','UL','OL','LI','H1','H2','H3','H4','H5','H6',
+  'CODE','PRE','BLOCKQUOTE','A','SPAN','DIV','TABLE','THEAD','TBODY','TR','TH','TD','IMG',
+  'HR','SUP','SUB','CITE','Q',
+]);
+const announceAllowedAttrs = new Set([
+  'href','target','rel','src','alt','title','width','height','colspan','rowspan','align',
+]);
+const announceForbiddenTags = /^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|LINK|META|FORM|INPUT|BUTTON|TEXTAREA|SELECT|SVG|MATH)$/i;
+const announceSafeUrl = (u: string): boolean => {
+  const t = String(u || '').trim().toLowerCase();
+  return /^(https?:|mailto:|#|\/)/.test(t) || /^data:image\/(png|jpe?g|gif|webp);/i.test(t);
+};
+function sanitizeAnnouncementHTML(html: string): string {
+  if (typeof html !== 'string' || !html) return '';
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  for (const el of Array.from(doc.body.querySelectorAll('*'))) {
+    if (announceForbiddenTags.test(el.tagName)) {
+      el.remove();
+      continue;
+    }
+    if (!announceAllowedTags.has(el.tagName)) {
+      el.replaceWith(doc.createTextNode(el.textContent || ''));
+      continue;
+    }
+    for (const name of Array.from(el.attributes).map(a => a.name)) {
+      const lower = name.toLowerCase();
+      if (lower.startsWith('on') || !announceAllowedAttrs.has(lower)) {
+        el.removeAttribute(name);
+        continue;
+      }
+      if ((lower === 'href' || lower === 'src') && !announceSafeUrl(el.getAttribute(name) || '')) {
+        el.removeAttribute(name);
+        continue;
+      }
+      if (lower === 'target' && !['_blank', '_self'].includes(el.getAttribute(name) || '')) {
+        el.removeAttribute(name);
+      }
+    }
+    if (el.tagName === 'A' && el.hasAttribute('href')) {
+      el.setAttribute('rel', 'noopener noreferrer');
+    }
+  }
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_COMMENT);
+  const comments: Node[] = [];
+  while (walker.nextNode()) comments.push(walker.currentNode);
+  comments.forEach(c => c.parentNode?.removeChild(c));
+  return doc.body.innerHTML;
+}
+
 const announceText = computed(() => {
   const c = announcement.value.content;
   return typeof c === 'string' ? c : '';
 });
 
 const announceHtml = computed(() => {
-  const text = announceText.value;
-  if (announcement.value.format === 'html') return text;
+  const html = announceText.value;
+  if (announcement.value.format === 'html') return sanitizeAnnouncementHTML(html);
   if (announcement.value.format === 'markdown' || announcement.value.format === 'md') {
-    return text
+    return html
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/^### (.+)$/gm, '<h4>$1</h4>')
       .replace(/^## (.+)$/gm, '<h3>$1</h3>')
@@ -213,7 +265,7 @@ onMounted(() => { loadProfile(); loadPlugins(); });
     <AntApp>
       <div class="user-page">
         <header class="topbar">
-          <div class="brand">MianPro 用户中心</div>
+          <div class="brand"><AppBrand label="MianPro 用户中心" /></div>
           <Button v-if="currentUser" @click="logout">
             <template #icon><LogOut :size="16" /></template>退出
           </Button>
@@ -367,7 +419,7 @@ onMounted(() => { loadProfile(); loadPlugins(); });
 </template>
 
 <style scoped>
-.user-page { min-height: 100vh; background: #f5f7fb; }
+.user-page { min-height: 100vh; min-height: 100dvh; background: #f5f7fb; }
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #fff; border-bottom: 1px solid #edf0f5; }
 .brand { font-size: 17px; font-weight: 700; }
 .content { max-width: 880px; margin: 0 auto; padding: 24px 16px; }

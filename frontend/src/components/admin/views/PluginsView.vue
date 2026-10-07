@@ -185,6 +185,7 @@ function isOfficialPlugin(record: any): boolean {
                 {{ record.title || record.id }}
               </button>
             </div>
+            <div class="plugin-card-desc">{{ record.desc || "暂无介绍" }}</div>
             <div class="plugin-card-tags">
               <Tag
                 v-if="pluginHasSchedule(record)"

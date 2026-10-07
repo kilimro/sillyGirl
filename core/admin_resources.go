@@ -42,6 +42,7 @@ var adminBotSettingsKeys = []string{
 	"feishu.enable", "feishu.app_id", "feishu.app_secret", "feishu.verification_token", "feishu.debug",
 	"flowbot.enable", "flowbot.token", "flowbot.host", "flowbot.port", "flowbot.tls", "flowbot.debug",
 	"yyw.enable", "yyw.api_base", "yyw.selfid", "yyw.authorization",
+	"gewe.enable", "gewe.token", "gewe.app_id", "gewe.api_base", "gewe.self_wxid", "gewe.callback_url",
 	"sillyGirl.web_chat_public",
 }
 
@@ -65,13 +66,15 @@ func init() {
 	GinApi(GET, "/api/admin/message-rules/:kind", RequireAuth, handleGetMessageRules)
 	GinApi(POST, "/api/admin/message-rules/:kind/:key", RequireAuth, handlePutMessageRule)
 	GinApi(POST, "/api/admin/message-rules/:kind/:key/deletions", RequireAuth, handleDeleteMessageRule)
-	// 飞书一键接入：handler 由 adapters/feishu 包注入（本地工具，不强制 auth）
-	GinApi(POST, "/api/admin/feishu/register", func(ctx *gin.Context) {
+	// 飞书一键接入：handler 由 adapters/feishu 包注入。
+	// 该接口会触发飞书 App 注册并自动写入 app_id/app_secret/enable 配置，
+	// 必须要求管理员鉴权，防止未认证攻击者劫持机器人接入配置。
+	GinApi(POST, "/api/admin/feishu/register", RequireAuth, func(ctx *gin.Context) {
 		if FeishuRegisterHandler != nil {
 			FeishuRegisterHandler(ctx)
 		}
 	})
-	GinApi(GET, "/api/admin/feishu/register", func(ctx *gin.Context) {
+	GinApi(GET, "/api/admin/feishu/register", RequireAuth, func(ctx *gin.Context) {
 		if FeishuRegisterStatusHandler != nil {
 			FeishuRegisterStatusHandler(ctx)
 		}

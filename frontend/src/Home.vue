@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { User, ArrowRight, BookOpen, MessageSquare, Boxes, Zap, Radio, Shield } from 'lucide-vue-next';
+import AppBrand from './components/common/AppBrand.vue';
 
 const iframeSrc = ref('');
 const loading = ref(true);
@@ -40,6 +41,7 @@ function openDashboard() { window.location.href = '/admin'; }
 
       <div class="hero-wrap">
         <div class="hero-left">
+          <AppBrand class="home-brand" />
           <div class="badge">
             <span class="dot"></span>
             多平台机器人管理
@@ -133,7 +135,7 @@ function openDashboard() { window.location.href = '/admin'; }
 </template>
 
 <style scoped>
-.home-page { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+.home-page { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; position: relative; }
 .main-iframe { width: 100%; height: 100%; border: 0; }
 
 .default-home {
@@ -158,6 +160,7 @@ function openDashboard() { window.location.href = '/admin'; }
   background: #eff6ff; color: #2563eb; font-size: 13px; font-weight: 500;
   margin-bottom: 24px;
 }
+.home-brand { margin-bottom: 16px; }
 .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #2563eb; }
 
 .hero-title { font-size: 48px; font-weight: 800; line-height: 1.15; color: #111827; margin: 0 0 20px; }
