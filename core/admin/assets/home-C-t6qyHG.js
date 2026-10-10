@@ -1,0 +1,1 @@
+import{t as e}from"./watchdog-CVnAPqp7.js";import{P as t}from"./antd-vendor-C4FMqkCu.js";import{t as n}from"./Home-DhSR3JAe.js";console.log(`欢迎使用 MianPro！`),e(`home`),t(n).mount(`#home-root`);

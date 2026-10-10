@@ -743,8 +743,8 @@ canvas {
 
 .plugin-card-icon:hover,
 .plugin-card-icon:focus-visible {
-  border-color: #91caff;
-  box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.1);
+  border-color: #cbd5e1;
+  box-shadow: 0 0 0 3px rgba(10, 10, 12, 0.06);
   outline: 0;
 }
 
@@ -807,7 +807,7 @@ canvas {
 
 .plugin-card-title:hover,
 .plugin-card-title:focus-visible {
-  color: #1677ff;
+  color: #0a0a0c;
   outline: 0;
 }
 
@@ -935,15 +935,15 @@ canvas {
 }
 
 .plugin-card-settings:not(:disabled):hover {
-  color: #1677ff;
-  background: #f0f7ff;
-  border-color: #91caff;
+  color: #0a0a0c;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .plugin-card-download {
-  color: #1677ff;
-  background: #f7fbff;
-  border-color: #b7d9ff;
+  color: #475569;
+  background: #f8fafc;
+  border-color: #e5e7eb;
 }
 
 .plugin-card-upgrade {
@@ -965,9 +965,9 @@ canvas {
 }
 
 .plugin-card-download:not(:disabled):hover {
-  color: #0958d9;
-  background: #e6f4ff;
-  border-color: #69b1ff;
+  color: #0a0a0c;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .plugin-card-upgrade:not(:disabled):hover {
@@ -1787,4 +1787,226 @@ a.ant-typography,
 
 .ant-menu-light .ant-menu-item-selected {
   color: #0958d9 !important;
+}
+
+/* ============================================================
+   Hearth「Life OS」视觉主题 —— 仅改外观皮肤，不改任何逻辑
+   深灰侧栏 / 黑底主按钮 / 圆角白卡 + 柔和阴影 / 浅灰底
+   ============================================================ */
+:root {
+  --h-side: #16181d;
+  --h-side-deep: #0d0f13;
+  --h-page: #f6f6f7;
+  --h-card: #ffffff;
+  --h-ink: #1a1c20;
+  --h-muted: #8a8f99;
+  --h-line: #ececee;
+  --h-black: #16181d;
+  --h-shadow: 0 1px 2px rgba(16, 18, 22, 0.04), 0 6px 20px rgba(16, 18, 22, 0.05);
+  --h-shadow-hover: 0 4px 10px rgba(16, 18, 22, 0.06), 0 16px 40px rgba(16, 18, 22, 0.1);
+}
+
+html,
+body {
+  background: var(--h-page);
+}
+
+/* 主区浅灰底、透明内容 */
+.shell .ant-layout {
+  background: var(--h-page) !important;
+}
+.shell .ant-layout .ant-layout-content {
+  background: transparent;
+}
+.content {
+  background: transparent;
+}
+
+/* 顶栏：去白块、细边 */
+.topbar {
+  background: transparent;
+  border-bottom: 1px solid var(--h-line);
+}
+
+/* 卡片：大圆角 + 柔和阴影 */
+.ant-card {
+  border-radius: 16px !important;
+  border: 1px solid var(--h-line) !important;
+  box-shadow: var(--h-shadow) !important;
+}
+.ant-card .ant-card-head {
+  border-bottom: 1px solid var(--h-line);
+}
+.panel {
+  border-radius: 12px;
+  border: 1px solid var(--h-line);
+  box-shadow: var(--h-shadow);
+}
+
+/* 黑底主按钮（Hearth 主按钮语言） */
+.ant-btn-primary:not(:disabled) {
+  background: var(--h-black) !important;
+  border-color: var(--h-black) !important;
+  box-shadow: 0 6px 16px rgba(16, 18, 22, 0.18) !important;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.ant-btn-primary:not(:disabled):hover {
+  background: #2a2d34 !important;
+  border-color: #2a2d34 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(16, 18, 22, 0.26) !important;
+}
+
+/* 深色侧栏 */
+.desktop-sider {
+  background: var(--h-side) !important;
+  display: flex !important;
+  flex-direction: column;
+}
+.sider-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  background: var(--h-side);
+}
+.sider-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 600;
+}
+.sider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+}
+.sider-version {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+}
+.brand {
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.brand .app-brand {
+  color: #fff;
+}
+/* dark 菜单选中态：黑底白字圆角（对照设计图 Goals 项） */
+.ant-menu-dark {
+  background: transparent !important;
+}
+.ant-menu-dark .ant-menu-item {
+  border-radius: 10px;
+  margin-inline: 8px !important;
+  width: auto !important;
+  color: #9aa0ab !important;
+}
+.ant-menu-dark .ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+}
+.ant-menu-dark .ant-menu-item-selected {
+  background: var(--h-side-deep) !important;
+  color: #fff !important;
+}
+.ant-menu-dark .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+/* 数字统计：更稳重 */
+.ant-statistic-content {
+  font-weight: 800 !important;
+  color: var(--h-ink) !important;
+}
+
+/* ---- Hearth 收口：去残留老蓝 ---- */
+/* 侧栏品牌字提亮（盖过 AppBrand scoped 的深灰） */
+.desktop-sider .app-brand,
+.mobile-menu-drawer .app-brand {
+  color: #fff !important;
+}
+/* link 型按钮（如「查看全部」）去蓝，转中性深色 */
+.ant-btn-link:not(:disabled) {
+  color: var(--h-ink) !important;
+}
+.ant-btn-link:not(:disabled):hover {
+  color: #000 !important;
+}
+/* 右下角悬浮聊天按钮：亮蓝 → 深色主按钮语言 */
+.web-chat-fab {
+  background: var(--h-black) !important;
+  box-shadow: 0 8px 24px rgba(16, 18, 22, 0.3) !important;
+}
+.web-chat-fab:hover {
+  background: #2a2d34 !important;
+}
+
+/* 侧栏 logo：去掉突兀白方块，蓝图标直接落黑底（只去底色，保留图片） */
+.desktop-sider .app-brand-mark,
+.mobile-menu-drawer .app-brand-mark,
+.desktop-sider .brand-mark,
+.mobile-menu-drawer .brand-mark {
+  background-color: transparent !important;
+  background-size: contain !important;
+  box-shadow: none !important;
+}
+
+/* ===== plugins 页中性化：彩色标签/tab/提示条统一黑+青绿 ===== */
+.ant-tag-purple {
+  background: #f3f4f6 !important;
+  color: #4b5563 !important;
+  border-color: #e5e7eb !important;
+}
+.ant-tag-gold {
+  background: #ecfdf5 !important;
+  color: #0f766e !important;
+  border-color: #d1fae5 !important;
+}
+.ant-tag-blue {
+  background: #f3f4f6 !important;
+  color: #4b5563 !important;
+  border-color: #e5e7eb !important;
+}
+.ant-tag-green {
+  background: #ecfdf5 !important;
+  color: #0f766e !important;
+  border-color: #d1fae5 !important;
+}
+.ant-tag-cyan {
+  background: #ecfdf5 !important;
+  color: #0f766e !important;
+  border-color: #d1fae5 !important;
+}
+/* 顶部 tab 下划线墨黑 */
+.ant-tabs-ink-bar { background: #0a0a0c !important; }
+.ant-tabs-tab-active .ant-tabs-tab-btn { color: #0a0a0c !important; font-weight: 600; }
+/* info 提示条灰底 */
+.ant-alert-info {
+  background: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+.ant-alert-info .ant-alert-icon { color: #6b7280 !important; }
+
+/* ===== plugins 卡片微妙渐变 + hover ===== */
+.plugin-card,
+.home-plugin-card,
+.ant-card.plugin-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%) !important;
+  border: 1px solid #eef0f3 !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.plugin-card:hover {
+  box-shadow: 0 12px 32px rgba(10, 10, 12, 0.1) !important;
+  transform: translateY(-2px);
 }

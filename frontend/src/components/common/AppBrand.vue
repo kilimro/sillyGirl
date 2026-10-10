@@ -39,7 +39,6 @@ withDefaults(
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: #fff url("../../../logo.png") center 45% / 150% auto no-repeat;
-  box-shadow: 0 1px 4px rgb(148 81 48 / 18%);
+  background: url("../../../logo.png") center center / contain no-repeat;
 }
 </style>

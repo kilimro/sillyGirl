@@ -13,6 +13,7 @@ import AdminAuth from "./components/admin/AdminAuth.vue";
 import AdminWebChat from "./components/admin/AdminWebChat.vue";
 import { adminViewContextKey } from "./components/admin/adminViewContext";
 import AppBrand from "./components/common/AppBrand.vue";
+import Home from "./Home.vue";
 import { useAdminController } from "./composables/admin/useAdminController";
 
 const controller = useAdminController();
@@ -20,6 +21,12 @@ provide(adminViewContextKey, controller);
 
 const { booting, logout, menuItems, mobileMenuOpen, navigate, page, user } =
   controller;
+
+// 根路径显示对外落地门面 Home.vue；/admin 与 /user 走各自页面
+const isLanding = computed(() => {
+  const p = window.location.pathname;
+  return p === "/" || p === "/index.html" || p.endsWith("/index.html#");
+});
 
 const adminViews = {
   welcome: defineAsyncComponent(
@@ -63,18 +70,27 @@ const activeView = computed(() => adminViews[page.value] || adminViews.welcome);
 <template>
   <ConfigProvider :locale="zhCN">
     <AntApp>
-      <AdminAuth v-if="!booting && !user" />
+      <Home v-if="isLanding" />
+      <AdminAuth v-else-if="!booting && !user" />
 
       <Layout v-else class="shell">
-        <Layout.Sider class="desktop-sider" :width="220" theme="light">
+        <Layout.Sider class="desktop-sider" :width="220" theme="dark">
           <AppBrand class="brand" />
           <Menu
+            theme="dark"
             mode="inline"
             :selected-keys="[page]"
             :items="menuItems"
             style="border-inline-end: 0; padding-top: 8px"
             @click="(e: any) => navigate(e.key)"
           />
+          <div class="sider-footer">
+            <div class="sider-status">
+              <span class="sider-dot"></span>
+              <span>系统运行中</span>
+            </div>
+            <div class="sider-version">MianPro v1.3.2</div>
+          </div>
         </Layout.Sider>
         <Layout>
           <div class="topbar">
@@ -116,6 +132,7 @@ const activeView = computed(() => adminViews[page.value] || adminViews.welcome);
         >
           <AppBrand class="brand" />
           <Menu
+            theme="dark"
             mode="inline"
             :selected-keys="[page]"
             :items="menuItems"
@@ -125,7 +142,7 @@ const activeView = computed(() => adminViews[page.value] || adminViews.welcome);
         </Drawer>
       </Layout>
 
-      <AdminWebChat />
+      <AdminWebChat v-if="!isLanding" />
     </AntApp>
   </ConfigProvider>
 </template>

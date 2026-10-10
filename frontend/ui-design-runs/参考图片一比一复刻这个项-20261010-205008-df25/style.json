@@ -1,0 +1,31 @@
+{
+  "query": "参考图片一比一复刻这个项目的 admin 管理端 UI，需要插画就调用技能画出来，只改 UI 不改后端逻辑，先从 admin 管理端开始",
+  "signature": {
+    "ground": null,
+    "typeVoice": null,
+    "imageWorld": "illustration",
+    "layoutLogic": null,
+    "colorStrategy": null,
+    "motionVoice": null
+  },
+  "why": {
+    "ground": "query 没给这一维的信号 —— 由你按内容定",
+    "typeVoice": "query 没给这一维的信号 —— 由你按内容定",
+    "imageWorld": "语义命中 1 个线索",
+    "layoutLogic": "query 没给这一维的信号 —— 由你按内容定",
+    "colorStrategy": "query 没给这一维的信号 —— 由你按内容定",
+    "motionVoice": "query 没给这一维的信号 —— 由你按内容定"
+  },
+  "open": [
+    "ground",
+    "typeVoice",
+    "layoutLogic",
+    "colorStrategy",
+    "motionVoice"
+  ],
+  "divergence": {
+    "vsRecent": [],
+    "min": null,
+    "require": 3
+  }
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MianPro · 控制台总览 · 设计稿</title>
+<style>
+:root{
+  --side-bg:#16181d;
+  --side-ink:#9aa0ab;
+  --side-on:#ffffff;
+  --page:#f6f6f7;
+  --card:#ffffff;
+  --ink:#1a1c20;
+  --muted:#8a8f99;
+  --line:#ececee;
+  --black:#16181d;
+  --black-2:#2a2d34;
+  --accent:#16181d;
+  --ok:#16a34a; --ok-ink:#15803d; --ok-soft:rgba(22,163,74,.10);
+  --warn:#d97706; --warn-ink:#92400e; --warn-soft:rgba(217,119,6,.12);
+  --shadow:0 1px 2px rgba(16,18,22,.04), 0 6px 20px rgba(16,18,22,.05);
+  --shadow-hover:0 4px 10px rgba(16,18,22,.06), 0 16px 40px rgba(16,18,22,.10);
+  --r:16px;
+  --r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.ic{width:18px;height:18px;flex:none;display:inline-block;vertical-align:-4px}
+
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+@media (max-width:1180px){ .app{grid-template-columns:72px 1fr} .side .s-label,.side .s-group,.side .s-today,.side .s-user,.side .s-search,.side .s-brand-txt{display:none} }
+
+/* ── 深色侧栏 ─────────────────────────── */
+.side{background:var(--side-bg);color:var(--side-ink);
+  display:flex;flex-direction:column;padding:18px 14px;gap:4px}
+.s-brand{display:flex;align-items:center;gap:10px;padding:4px 10px 18px}
+.s-brand-mark{width:34px;height:34px;border-radius:9px;background:#fff;color:var(--black);
+  display:grid;place-items:center;font-weight:800;font-size:18px}
+.s-brand-txt .t{color:#fff;font-weight:700;font-size:15px}
+.s-brand-txt .s{font-size:11px;color:#6b7280;letter-spacing:.08em}
+.s-search{display:flex;align-items:center;gap:8px;background:#23262d;border-radius:9px;
+  padding:9px 12px;margin:0 4px 14px;color:#6b7280;font-size:13px}
+.s-search kbd{margin-left:auto;font-size:11px;background:#30343b;padding:1px 6px;border-radius:4px;color:#9aa0ab}
+.s-group{font-size:11px;color:#5b616b;padding:14px 10px 6px;letter-spacing:.05em}
+.side a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;
+  color:var(--side-ink);font-size:13.5px;transition:background .15s}
+.side a:hover{background:#23262d;color:#d6d9de}
+.side a.on{background:#fff;color:var(--black);font-weight:600}
+.side a.on .ic{color:var(--black)}
+.side a .badge{margin-left:auto;font-size:11px;background:#30343b;color:#c7cbd2;
+  padding:1px 7px;border-radius:8px}
+.side a.on .badge{background:#e5e7eb;color:#374151}
+.s-today{padding:6px 12px;font-size:12.5px;color:#7b828d;line-height:2.1}
+.s-today div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-foot{margin-top:auto;display:flex;flex-direction:column;gap:2px}
+.s-user{display:flex;align-items:center;gap:10px;padding:10px;margin-top:8px;
+  background:#1f2228;border-radius:11px}
+.s-user .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.s-user .nm{color:#fff;font-size:13px;font-weight:600}
+.s-user .em{font-size:11px;color:#6b7280}
+.s-theme{display:flex;gap:4px;padding:6px 4px 0;font-size:11.5px;color:#6b7280}
+.s-theme span{padding:3px 9px;border-radius:6px}
+.s-theme span.on{background:#30343b;color:#d6d9de}
+
+/* ── 主区 ──────────────────────────────── */
+.main{display:flex;flex-direction:column;min-width:0}
+.top{display:flex;align-items:center;gap:12px;padding:14px 28px;
+  background:transparent}
+.top .back{color:var(--muted);font-size:13.5px;display:flex;align-items:center;gap:6px}
+.top .sp{margin-left:auto}
+.top .icon-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+  background:var(--card);box-shadow:var(--shadow);color:var(--muted)}
+.top .btn-new{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 18px;
+  background:var(--black);color:#fff;border-radius:10px;font-size:13.5px;font-weight:600;
+  box-shadow:0 6px 16px rgba(16,18,22,.22)}
+.body{padding:4px 28px 40px;display:flex;flex-direction:column;gap:22px;animation:fadeUp .5s ease both}
+
+/* ── hero 横幅 ─────────────────────────── */
+.hero{position:relative;display:flex;align-items:center;gap:24px;
+  background:var(--card);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;
+  padding:34px 36px;min-height:200px}
+.hero .txt{position:relative;z-index:2;max-width:44%}
+.hero .eyebrow{font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:600;margin-bottom:8px}
+.hero h1{font-size:34px;font-weight:800;letter-spacing:-.01em;line-height:1.1;color:var(--ink)}
+.hero p{margin-top:8px;color:var(--muted);font-size:14.5px}
+.hero .actions{display:flex;gap:10px;margin-top:20px}
+.btn-dark{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 20px;
+  background:var(--black);color:#fff;border-radius:11px;font-weight:600;font-size:14px;
+  transition:transform .15s, box-shadow .15s}
+.btn-dark:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(16,18,22,.28)}
+.btn-soft{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px;
+  background:#f1f2f4;border-radius:11px;font-size:14px;color:var(--ink);font-weight:500}
+.hero .art{position:absolute;right:0;top:0;bottom:0;width:58%;
+  background:url('assets/hero.jpg') center/cover no-repeat;
+  -webkit-mask:linear-gradient(90deg,transparent 0,#000 22%);
+  mask:linear-gradient(90deg,transparent 0,#000 22%)}
+
+/* ── tab 栏 ──────────────────────────── */
+.tabs{display:flex;align-items:center;gap:4px;background:var(--card);border-radius:12px;
+  padding:5px;width:fit-content;box-shadow:var(--shadow)}
+.tabs button{padding:7px 16px;border-radius:9px;font-size:13.5px;color:var(--muted)}
+.tabs button.on{background:var(--black);color:#fff;font-weight:600}
+.tabs .date{margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--muted);
+  font-size:13.5px;background:var(--card);box-shadow:var(--shadow);border-radius:11px;
+  height:40px;padding:0 14px;margin-left:14px}
+
+/* ── 主体网格 ──────────────────────────── */
+.grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+@media (max-width:1180px){ .grid{grid-template-columns:1fr} }
+.col{display:flex;flex-direction:column;gap:22px;min-width:0}
+
+.sec-head{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--ink);
+  margin-bottom:12px}
+.sec-head .ic{color:var(--muted)}
+
+/* 进度卡 */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){ .kpis{grid-template-columns:1fr} }
+.kpi{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;
+  transition:transform .18s, box-shadow .18s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.kpi .h{display:flex;align-items:flex-start;justify-content:space-between}
+.kpi .t{font-size:14px;font-weight:600}
+.kpi .s{font-size:11.5px;color:var(--muted);margin-top:2px}
+.kpi .like{color:var(--muted)}
+.kpi .v{font-size:32px;font-weight:800;margin-top:10px}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi .seg{display:flex;gap:4px;margin-top:12px}
+.kpi .seg span{font-size:10.5px;padding:2px 8px;border-radius:5px;color:var(--muted);background:#f1f2f4}
+.kpi .seg span.on{background:var(--black);color:#fff}
+.kpi svg.chart{display:block;margin-top:10px;width:100%;height:56px}
+
+/* 快捷入口 三卡 */
+.visions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){ .visions{grid-template-columns:1fr} }
+.vision{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;
+  transition:transform .18s, box-shadow .18s;cursor:pointer}
+.vision:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.vision .pic{height:110px;background:#f4f5f7 center/cover no-repeat;position:relative}
+.vision .tag{position:absolute;top:10px;left:10px;width:26px;height:26px;border-radius:7px;
+  background:#fff;display:grid;place-items:center;color:var(--muted);box-shadow:var(--shadow)}
+.vision .body{padding:14px 16px 16px}
+.vision .tt{font-size:14px;font-weight:700}
+.vision .dd{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vision .foot{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.vision .foot b{color:var(--ink);font-weight:600}
+.vision .foot .r{margin-left:auto}
+
+/* 右栏：平台状态 */
+.pillars{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:8px 4px}
+.pillar{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.pillar + .pillar{border-top:1px solid var(--line)}
+.pillar .p-ic{width:38px;height:38px;border-radius:10px;background:#f1f2f4;display:grid;place-items:center;color:var(--ink)}
+.pillar .p-n{font-size:14px;font-weight:600}
+.pillar .p-s{font-size:12px;color:var(--muted)}
+.pillar .grade{margin-left:auto;font-size:12px;font-weight:600;padding:3px 9px;border-radius:7px}
+.grade.ok{background:var(--ok-soft);color:var(--ok-ink)}
+.grade.warn{background:var(--warn-soft);color:var(--warn-ink)}
+
+/* Quick stats */
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.q{background:var(--card);border-radius:var(--r-sm);box-shadow:var(--shadow);padding:14px}
+.q .lab{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.q .v{font-size:22px;font-weight:800;margin-top:4px}
+
+/* 状态区（弹窗触发用，保持契约） */
+[data-state]{display:none}
+[data-state].on{display:block}
+.empty,.error{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:60px 20px;text-align:center;color:var(--muted)}
+.empty b,.error b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+
+/* 弹窗 */
+.scrim{position:fixed;inset:0;background:rgba(16,18,22,.4);opacity:0;pointer-events:none;transition:.18s;z-index:50}
+.scrim.on{opacity:1;pointer-events:auto}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:min(440px,92vw);
+  background:var(--card);border-radius:16px;padding:22px;opacity:0;pointer-events:none;transition:.18s;
+  box-shadow:0 24px 60px rgba(16,18,22,.25);z-index:51}
+.modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.modal h3{font-size:16px;margin-bottom:4px}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:14px}
+.modal .fld{margin-bottom:12px}
+.modal .fld label{display:block;font-size:13px;margin-bottom:5px;font-weight:500}
+.modal .fld input,.modal .fld select{width:100%;height:38px;border:1px solid var(--line);
+  border-radius:9px;padding:0 11px;font-size:13.5px}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.btn-line{height:38px;padding:0 15px;border-radius:9px;background:#f1f2f4;font-size:13.5px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{animation:fadeUp .5s .05s ease both}
+.grid{animation:fadeUp .5s .15s ease both}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 深色侧栏 -->
+  <nav class="side">
+    <div class="s-brand">
+      <div class="s-brand-mark">✳</div>
+      <div class="s-brand-txt"><div class="t">MianPro</div><div class="s">CONSOLE</div></div>
+    </div>
+    <div class="s-search"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+      搜索…<kbd>⌘K</kbd></div>
+    <div class="s-group">MAIN</div>
+    <a href="#" class="on"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm96,0H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm-96,112H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,152Zm96,0H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,152Z"/></svg><span class="s-label">总览</span></a>
+    <a href="#"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></svg><span class="s-label">消息</span></a>
+    <a href="#"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16Zm-52-56H92a28,28,0,0,0,0,56h72a28,28,0,0,0,0-56Zm-24,16v24H116V152ZM80,164a12,12,0,0,1,12-12h8v24H92A12,12,0,0,1,80,164Zm84,12h-8V152h8a12,12,0,0,1,0,24ZM72,108a12,12,0,1,1,12,12A12,12,0,0,1,72,108Zm88,0a12,12,0,1,1,12,12A12,12,0,0,1,160,108Z"/></svg><span class="s-label">BOT 接入</span></a>
+    <a href="#"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H128a8,8,0,0,1,0-16h88A8,8,0,0,1,224,128ZM128,72h88a8,8,0,0,0,0-16H128a8,8,0,0,0,0,16Zm88,112H128a8,8,0,0,0,0,16h88a8,8,0,0,0,0-16ZM82.34,42.34,56,68.69,45.66,58.34A8,8,0,0,0,34.34,69.66l16,16a8,8,0,0,0,11.32,0l32-32A8,8,0,0,0,82.34,42.34Zm0,64L56,132.69,45.66,122.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Zm0,64L56,196.69,45.66,186.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Z"/></svg><span class="s-label">任务</span><span class="badge">2</span></a>
+    <a href="#"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M220.27,158.54a8,8,0,0,0-7.7-.46,20,20,0,1,1,0-36.16A8,8,0,0,0,224,114.69V72a16,16,0,0,0-16-16H171.78a35.36,35.36,0,0,0,.22-4,36.11,36.11,0,0,0-11.36-26.24,36,36,0,0,0-60.55,23.62,36.56,36.56,0,0,0,.14,6.62H64A16,16,0,0,0,48,72v32.22a35.36,35.36,0,0,0-4-.22,36.12,36.12,0,0,0-26.24,11.36,35.7,35.7,0,0,0-9.69,27,36.08,36.08,0,0,0,33.31,33.6,35.68,35.68,0,0,0,6.62-.14V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V165.31A8,8,0,0,0,220.27,158.54ZM208,208H64V165.31a8,8,0,0,0-11.43-7.23,20,20,0,1,1,0-36.16A8,8,0,0,0,64,114.69V72h46.69a8,8,0,0,0,7.23-11.43,20,20,0,1,1,36.16,0A8,8,0,0,0,161.31,72H208v32.23a35.68,35.68,0,0,0-6.62-.14A36,36,0,0,0,204,176a35.36,35.36,0,0,0,4-.22Z"/></svg><span class="s-label">插件市场</span></a>
+    <a href="#"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Zm0,24a95,95,0,0,1,26.55,3.77L128,72,101.45,51.77A95,95,0,0,1,128,48Z"/></svg><span class="s-label">存储</span><span class="badge">8</span></a>
+    <div class="s-group">TODAY</div>
+    <div class="s-today">
+      <div>配置 Gewe 回调地址</div>
+      <div>审核新插件上架</div>
+      <div>检查飞书机器人健康</div>
+      <div>处理 Master 授权</div>
+    </div>
+    <div class="s-foot">
+      <a href="#"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Z"/></svg><span class="s-label">设置</span></a>
+      <div class="s-user">
+        <div class="av">A</div>
+        <div><div class="nm">admin</div><div class="em">控制台管理员</div></div>
+      </div>
+      <div class="s-theme"><span class="on">Light</span><span>Dark</span><span>System</span></div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <header class="top">
+      <div class="back">
+        <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H59.31l34.35,34.34a8,8,0,0,1-11.32,11.32l-48-48a8,8,0,0,1,0-11.32l48-48a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg>
+        总览
+      </div>
+      <span class="sp"></span>
+      <button class="icon-btn"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M221.8,175.94c-5.55-9.56-13.8-36.61-13.8-71.88a80,80,0,1,0-160,0c0,35.27-8.25,62.32-13.8,71.88A16,16,0,0,0,48,200h40.81a40,40,0,0,0,80.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-23.15-16h46.3A24,24,0,0,1,128,216Z"/></svg></button>
+      <button class="btn-new" id="newBtn">＋ 新建平台</button>
+    </header>
+
+    <div class="body">
+      <!-- hero 横幅 -->
+      <section class="hero">
+        <div class="txt">
+          <div class="eyebrow">WELCOME BACK</div>
+          <h1>控制台总览</h1>
+          <p>你的多平台机器人，在这里统一接入、监控与扩展。</p>
+          <div class="actions">
+            <button class="btn-dark" id="newBtn2"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>接入新平台</button>
+            <button class="btn-soft"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M220.27,158.54a8,8,0,0,0-7.7-.46,20,20,0,1,1,0-36.16A8,8,0,0,0,224,114.69V72a16,16,0,0,0-16-16H171.78a35.36,35.36,0,0,0,.22-4,36.11,36.11,0,0,0-11.36-26.24,36,36,0,0,0-60.55,23.62,36.56,36.56,0,0,0,.14,6.62H64A16,16,0,0,0,48,72v32.22a35.36,35.36,0,0,0-4-.22,36.12,36.12,0,0,0-26.24,11.36,35.7,35.7,0,0,0-9.69,27,36.08,36.08,0,0,0,33.31,33.6,35.68,35.68,0,0,0,6.62-.14V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V165.31A8,8,0,0,0,220.27,158.54Z"/></svg>查看插件</button>
+          </div>
+        </div>
+        <div class="art"></div>
+      </section>
+
+      <!-- tab 栏 -->
+      <div style="display:flex;align-items:center">
+        <div class="tabs">
+          <button class="on">全部</button>
+          <button>QQ</button>
+          <button>微信</button>
+          <button>飞书</button>
+          <button>Gewe</button>
+        </div>
+        <div class="date">
+          <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM48,80H208V208H48Z"/></svg>
+          2026 Q4
+          <svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,0,1,11.32-11.32L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
+        </div>
+      </div>
+
+      <!-- 主体网格 -->
+      <div class="grid">
+        <div class="col">
+          <div>
+            <div class="sec-head"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,232a104,104,0,1,1,104-104A104.12,104.12,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.1,88.1,0,0,0,128,40Zm0,32a8,8,0,0,1,8,8v48.59l33.7,19.48a8,8,0,0,1-8,13.84l-37.7-21.74A8,8,0,0,1,120,121V80a8,8,0,0,1,8-8Z"/></svg>运行指标</div>
+            <div class="kpis">
+              <div class="kpi">
+                <div class="h"><div><div class="t">平台接入率</div><div class="s">已配置 / 总平台</div></div>
+                  <svg class="ic like" viewBox="0 0 256 256" fill="currentColor"><path d="M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34Z"/></svg></div>
+                <div class="v num">78%</div><div class="sub">目标 100%</div>
+                <div class="seg"><span>W1</span><span class="on">W2</span><span>W3</span></div>
+                <svg class="chart" viewBox="0 0 300 56" preserveAspectRatio="none">
+                  <polyline points="0,40 40,32 80,36 120,22 160,28 200,16 240,20 300,8" fill="none" stroke="#16181d" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="kpi">
+                <div class="h"><div><div class="t">今日消息处理</div><div class="s">收 + 发</div></div>
+                  <svg class="ic like" viewBox="0 0 256 256" fill="currentColor"><path d="M220.27,158.54a8,8,0,0,0-7.7-.46,20,20,0,1,1,0-36.16A8,8,0,0,0,224,114.69V72a16,16,0,0,0-16-16H171.78a35.36,35.36,0,0,0,.22-4,36.11,36.11,0,0,0-11.36-26.24,36,36,0,0,0-60.55,23.62,36.56,36.56,0,0,0,.14,6.62H64A16,16,0,0,0,48,72v32.22a35.36,35.36,0,0,0-4-.22,36.12,36.12,0,0,0-26.24,11.36,35.7,35.7,0,0,0-9.69,27,36.08,36.08,0,0,0,33.31,33.6,35.68,35.68,0,0,0,6.62-.14V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V165.31A8,8,0,0,0,220.27,158.54Z"/></svg></div>
+                <div class="v num">45%</div><div class="sub">较昨日 +12%</div>
+                <svg class="chart" viewBox="0 0 300 56" preserveAspectRatio="none">
+                  <g fill="#c9ccd2"><rect x="10" y="30" width="16" height="26" rx="2"/><rect x="40" y="22" width="16" height="34" rx="2"/><rect x="70" y="34" width="16" height="22" rx="2"/><rect x="100" y="16" width="16" height="40" rx="2"/><rect x="130" y="26" width="16" height="30" rx="2"/><rect x="160" y="12" width="16" height="44" rx="2"/><rect x="190" y="20" width="16" height="36" rx="2"/><rect x="220" y="8" width="16" height="48" rx="2"/><rect x="250" y="14" width="16" height="42" rx="2"/></g>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sec-head"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24a56,56,0,1,0,56,56A56.06,56.06,0,0,0,128,24Zm0,16a40,40,0,1,1-40,40A40,40,0,0,1,128,40Zm0,16a24,24,0,1,0,24,24A24,24,0,0,0,128,56Z"/></svg>快捷入口</div>
+            <div class="visions">
+              <div class="vision">
+                <div class="pic" style="background-image:url('assets/step.jpg')"><div class="tag"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34Z"/></svg></div></div>
+                <div class="body">
+                  <div class="tt">接入平台</div>
+                  <div class="dd">把 QQ、微信、飞书、Telegram、Gewe 等平台统一接入，一个面板管理所有机器人。</div>
+                  <div class="foot"><span class="ic" style="width:14px;height:14px"><svg viewBox="0 0 256 256" fill="currentColor"><circle cx="128" cy="128" r="24"/></svg></svg><b>进行中</b><span class="r">Q4 2026</span></div>
+                </div>
+              </div>
+              <div class="vision">
+                <div class="pic" style="background-image:url('assets/book.jpg')"><div class="tag"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M220.27,158.54a8,8,0,0,0-7.7-.46,20,20,0,1,1,0-36.16A8,8,0,0,0,224,114.69V72a16,16,0,0,0-16-16H171.78a35.36,35.36,0,0,0,.22-4,36.11,36.11,0,0,0-11.36-26.24,36,36,0,0,0-60.55,23.62,36.56,36.56,0,0,0,.14,6.62H64A16,16,0,0,0,48,72v32.22a35.36,35.36,0,0,0-4-.22,36.12,36.12,0,0,0-26.24,11.36,35.7,35.7,0,0,0-9.69,27,36.08,36.08,0,0,0,33.31,33.6,35.68,35.68,0,0,0,6.62-.14V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V165.31A8,8,0,0,0,220.27,158.54Z"/></svg></div></div>
+                <div class="body">
+                  <div class="tt">插件生态</div>
+                  <div class="dd">按需安装插件，扩展机器人能力，从对话到多媒体一应俱全。</div>
+                  <div class="foot"><span class="ic" style="width:14px;height:14px"><svg viewBox="0 0 256 256" fill="currentColor"><rect x="40" y="40" width="176" height="176" rx="6"/></svg></svg><b>已就绪</b><span class="r">2026</span></div>
+                </div>
+              </div>
+              <div class="vision">
+                <div class="pic" style="background-image:url('assets/plant.jpg')"><div class="tag"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104,104,0,0,0,128,24Z"/></svg></div></div>
+                <div class="body">
+                  <div class="tt">运行状态</div>
+                  <div class="dd">实时监控各 BOT 在线率、消息队列与异常告警，服务稳定可控。</div>
+                  <div class="foot"><span class="ic" style="width:14px;height:14px"><svg viewBox="0 0 256 256" fill="currentColor"><circle cx="128" cy="128" r="24"/></svg></svg><b>进行中</b><span class="r">Q4 2026</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 异常态（契约） -->
+          <section data-state="error">
+            <div class="error"><b>加载运行指标失败</b><span>网络超时，可检查服务后重试</span>
+              <button class="btn-dark" data-retry style="height:34px;padding:0 16px">重试</button></div>
+          </section>
+        </div>
+
+        <!-- 右栏 -->
+        <div class="col">
+          <div>
+            <div class="sec-head"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104,104,0,0,0,128,24Zm0,16a88,88,0,1,1-88,88A88.1,88.1,0,0,1,128,40Z"/></svg>平台状态</div>
+            <div class="pillars">
+              <div class="pillar"><div class="p-ic"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Z"/></svg></div>
+                <div><div class="p-n">QQ</div><div class="p-s">2 个在线 BOT</div></div><span class="grade ok">A+</span></div>
+              <div class="pillar"><div class="p-ic"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Z"/></svg></div>
+                <div><div class="p-n">微信</div><div class="p-s">1 个 BOT</div></div><span class="grade warn">B+</span></div>
+              <div class="pillar"><div class="p-ic"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104,104,0,0,0,128,24Z"/></svg></div>
+                <div><div class="p-n">飞书</div><div class="p-s">1 个 BOT</div></div><span class="grade ok">A</span></div>
+              <div class="pillar"><div class="p-ic"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,0,1,11.32-11.32L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg></div>
+                <div><div class="p-n">Gewe</div><div class="p-s">回调已配置</div></div><span class="grade ok">A+</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sec-head">Quick Stats</div>
+            <div class="quick">
+              <div class="q"><div class="lab"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104,104,0,0,0,128,24Z"/></svg>运行中 BOT</div><div class="v num">2</div></div>
+              <div class="q"><div class="lab"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H128a8,8,0,0,1,0-16h88A8,8,0,0,1,224,128ZM128,72h88a8,8,0,0,0,0-16H128a8,8,0,0,0,0,16Zm88,112H128a8,8,0,0,0,0,16h88a8,8,0,0,0,0-16Z"/></svg>今日任务</div><div class="v num">4</div></div>
+              <div class="q"><div class="lab"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80Z"/></svg>已接入平台</div><div class="v num">3</div></div>
+              <div class="q"><div class="lab"><svg class="ic" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A56,56,0,1,0,184,80,56,56,0,0,0,128,24Z"/></svg>平均可用率</div><div class="v num">99%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="modal" id="modal">
+  <h3>接入新平台</h3>
+  <p>选择要接入的消息平台，配置后即可统一管理。</p>
+  <div class="fld"><label>平台类型</label>
+    <select><option>Gewe（第三方微信）</option><option>QQ</option><option>飞书</option><option>Telegram</option></select></div>
+  <div class="fld"><label>名称</label><input placeholder="例如：我的微信助手" /></div>
+  <div class="acts"><button class="btn-line" data-close>取消</button>
+    <button class="btn-dark" data-close style="height:38px;padding:0 16px">创建</button></div>
+</div>
+
+<script>
+const scrim=document.getElementById('scrim'),modal=document.getElementById('modal');
+function openModal(on){scrim.classList.toggle('on',on);modal.classList.toggle('on',on);}
+scrim.onclick=()=>openModal(false);
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>openModal(false));
+document.getElementById('newBtn').onclick=()=>openModal(true);
+document.getElementById('newBtn2').onclick=()=>openModal(true);
+
+function show(name){
+  document.querySelectorAll('[data-state]').forEach(s=>
+    s.classList.toggle('on', s.dataset.state===name));
+}
+document.querySelector('[data-retry]').onclick=()=>show('none');
+
+window.__UI_CAPTURE__={
+  reset:async()=>{openModal(false);},
+  states:[
+    {id:'home', label:'总览首页'},
+    {id:'modal',label:'新建平台弹窗',go:async()=>openModal(true)},
+    {id:'error',label:'异常态',go:async()=>show('error')}
+  ]};
+</script>
+</body>
+</html>

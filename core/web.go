@@ -261,6 +261,16 @@ func initWeb() {
 			serveUser(c)
 			return
 		}
+		// 根路径下的静态资源（blob.gif / ill-*.jpg 等 public 文件）映射到 admin/ 下
+		if c.Request.Method == http.MethodGet {
+			p := c.Request.URL.Path
+			if strings.HasSuffix(p, ".gif") || strings.HasSuffix(p, ".jpg") || strings.HasSuffix(p, ".jpeg") ||
+				strings.HasSuffix(p, ".png") || strings.HasSuffix(p, ".svg") || strings.HasSuffix(p, ".ico") {
+				if serveEmbeddedFile(c, "admin"+p) {
+					return
+				}
+			}
+		}
 		if strings.HasPrefix(c.Request.URL.Path, "/assets/") {
 			if serveEmbeddedFile(c, "admin"+c.Request.URL.Path) {
 				return
