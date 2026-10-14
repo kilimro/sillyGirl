@@ -89,7 +89,7 @@ const activeView = computed(() => adminViews[page.value] || adminViews.welcome);
               <span class="sider-dot"></span>
               <span>系统运行中</span>
             </div>
-            <div class="sider-version">MianPro v1.3.2</div>
+            <div class="sider-version">MianPro v{{ user?.version?.local || "1.3.3" }}</div>
           </div>
         </Layout.Sider>
         <Layout>

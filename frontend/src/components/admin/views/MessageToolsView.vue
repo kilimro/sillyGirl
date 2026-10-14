@@ -167,27 +167,32 @@ const {
   >
     <Form layout="vertical"
       ><Form.Item label="关键词/正则" html-for="reply-keyword"
+        help="消息内容匹配到这个关键词时自动回复，支持正则表达式（如 ^你好$）"
         ><Input
           id="reply-keyword"
           name="reply-keyword"
           v-model:value="replies.form.keyword" /></Form.Item
       ><Form.Item label="回复内容" html-for="reply-content"
+        help="匹配成功后自动回复的文本内容"
         ><Input.TextArea
           id="reply-content"
           name="reply-content"
           v-model:value="replies.form.value"
           :rows="6" /></Form.Item
       ><Form.Item label="限定用户/群号" html-for="reply-number"
+        help="只对这个用户或群号生效，留空则全局生效"
         ><Input
           id="reply-number"
           name="reply-number"
           v-model:value="replies.form.number" /></Form.Item
       ><Form.Item label="平台" html-for="reply-platforms"
+        help="限定哪个平台生效（微信/QQ/飞书等），不选则所有平台生效"
         ><Select
           id="reply-platforms"
           v-model:value="replies.form.platforms"
           mode="tags" /></Form.Item
       ><Form.Item label="优先级" html-for="reply-priority"
+        help="数字越大越先匹配，同时匹配多条规则时按优先级从高到低执行"
         ><InputNumber
           id="reply-priority"
           v-model:value="replies.form.priority"
@@ -203,7 +208,9 @@ const {
     @ok="saveCarry"
   >
     <Form layout="vertical">
-      <Form.Item label="平台" html-for="carry-platform" required>
+      <Form.Item label="平台" html-for="carry-platform" required
+        help="限定哪个平台的群参与搬运（微信/QQ等）"
+      >
         <Select
           id="carry-platform"
           v-model:value="carry.form.platform"
@@ -211,14 +218,18 @@ const {
           @change="changeCarryPlatform"
         />
       </Form.Item>
-      <Form.Item label="群号" html-for="carry-chat-id" required>
+      <Form.Item label="群号" html-for="carry-chat-id" required
+        help="要监听的群聊 ID，该群的消息会被采集并按规则转发到其他地方"
+      >
         <Input
           id="carry-chat-id"
           name="carry-chat-id"
           v-model:value="carry.form.chat_id"
         />
       </Form.Item>
-      <Form.Item label="备注" html-for="carry-remark">
+      <Form.Item label="备注" html-for="carry-remark"
+        help="这个搬运任务的备注说明，方便识别"
+      >
         <Input.TextArea
           id="carry-remark"
           name="carry-remark"
@@ -226,7 +237,9 @@ const {
           :rows="2"
         />
       </Form.Item>
-      <Form.Item label="工作机器人" html-for="carry-bots">
+      <Form.Item label="工作机器人" html-for="carry-bots"
+        help="限定哪些机器人参与搬运（多选），不选则所有机器人都参与"
+      >
         <Select
           id="carry-bots"
           v-model:value="carry.form.bots_id"
@@ -234,7 +247,9 @@ const {
           :options="optionMap(carry.selects.bots_id)"
         />
       </Form.Item>
-      <Form.Item label="处理脚本" html-for="carry-scripts">
+      <Form.Item label="处理脚本" html-for="carry-scripts"
+        help="消息到达后调用的脚本（节点/Python），自定义处理后转发到目标平台"
+      >
         <Select
           id="carry-scripts"
           v-model:value="carry.form.scripts"
@@ -255,22 +270,26 @@ const {
       ><Form.Item
         :label="msgState.active === 'private' ? '用户 ID' : '群号'"
         html-for="message-rule-key"
+        :help="msgState.active === 'private' ? '要监听的用户 ID（私聊）' : '要监听的群号（群聊）'"
         ><Input
           id="message-rule-key"
           name="message-rule-key"
           v-model:value="msgState.form.key"
           :disabled="!!msgState.editing?.value" /></Form.Item
       ><Form.Item label="平台" html-for="message-rule-platform"
+        help="哪个平台的用户/群（微信/QQ/飞书等）"
         ><Select
           id="message-rule-platform"
           v-model:value="msgState.form.platform"
           :options="msgState.platforms" /></Form.Item
       ><Form.Item label="说明" html-for="message-rule-description"
+        help="这个监听规则的备注说明，方便识别用途"
         ><Input
           id="message-rule-description"
           name="message-rule-description"
           v-model:value="msgState.form.desc" /></Form.Item
       ><Form.Item label="启用" html-for="message-rule-enabled"
+        help="开关：启用后才会监听该用户/群的消息"
         ><Switch
           id="message-rule-enabled"
           v-model:checked="msgState.form.enable"

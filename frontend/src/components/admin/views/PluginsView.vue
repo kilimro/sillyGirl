@@ -96,7 +96,7 @@ const {
 function isOfficialPlugin(record: any): boolean {
   if (!record) return false;
   const str = JSON.stringify(record).toLowerCase();
-  return str.includes("kilimro/sillygirl_plugins");
+  return str.includes("kilimro/");
 }
 </script>
 

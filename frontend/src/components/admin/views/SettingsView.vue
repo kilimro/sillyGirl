@@ -139,6 +139,7 @@ const {
         />
       </Form.Item>
       <Form.Item label="自动撤回正则" html-for="settings-recall"
+        help="匹配到的消息会被自动撤回。每行一个正则，例如：^【广告】 会撤回所有以【广告】开头的消息；留空则不撤回"
         ><Input.TextArea
           id="settings-recall"
           name="settings-recall"
@@ -312,6 +313,7 @@ const {
         </Space.Compact>
       </Form.Item>
       <Form.Item label="系统调试模式" html-for="settings-debug"
+        help="开启后日志会输出详细的调试信息（消息内容、匹配规则、插件执行过程），方便排查问题；正常运行时建议关闭"
         ><Switch
           id="settings-debug"
           v-model:checked="settings.form.debug"

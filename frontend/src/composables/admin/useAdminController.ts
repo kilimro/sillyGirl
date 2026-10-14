@@ -473,18 +473,18 @@ export function useAdminController() {
 
   const menuItems = [
     { key: "welcome", label: "概览", icon: () => h(Home, { size: 16 }) },
-    { key: "bots", label: "BOT", icon: () => h(Bot, { size: 16 }) },
+    { key: "bots", label: "平台接入", icon: () => h(Bot, { size: 16 }) },
     {
       key: "dependencies",
-      label: "依赖管理",
+      label: "运行环境",
       icon: () => h(Package, { size: 16 }),
     },
     { key: "plugins", label: "插件市场", icon: () => h(Plug, { size: 16 }) },
-    { key: "storage", label: "存储", icon: () => h(Database, { size: 16 }) },
+    { key: "storage", label: "数据存储", icon: () => h(Database, { size: 16 }) },
     { key: "users", label: "用户管理", icon: () => h(User, { size: 16 }) },
     {
       key: "message-tools",
-      label: "转发/回复/监听",
+      label: "消息规则",
       icon: () => h(MessageSquare, { size: 16 }),
     },
     {
@@ -499,7 +499,7 @@ export function useAdminController() {
     },
     {
       key: "masters",
-      label: "管理员",
+      label: "权限管理",
       icon: () => h(ShieldCheck, { size: 16 }),
     },
     {

@@ -2,6 +2,7 @@ package gewe
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -161,6 +162,7 @@ type geweIncoming struct {
 	toUser    string
 	content   string
 	newMsgID  string
+	msgID     string // 微信数字 msgId（v1.0 Data.MsgId），语音下载用
 	isSelf    bool
 	createTime int64
 }
@@ -222,7 +224,7 @@ func receiveWebhook(c *gin.Context) {
 	}
 
 	// 内容转换为供核心消费的文本（多媒体生成 CQ 码）
-	text := toCoreContent(cb.msgType, cb.content)
+	text := toCoreContent(cb.msgType, cb.content, cb.msgID)
 	if text == "" {
 		c.JSON(http.StatusOK, gin.H{"success": true})
 		return
@@ -290,6 +292,13 @@ func parseCallback(body []byte) (*geweIncoming, error) {
 	if cb.newMsgID == "" {
 		cb.newMsgID = itoa(data["NewMsgId"])
 	}
+	// 微信数字 msgId（Data.MsgId），语音下载 API 需要
+	if n, ok := data["MsgId"].(float64); ok && n > 0 {
+		cb.msgID = itoa(data["MsgId"])
+	}
+	if cb.msgID == "" {
+		cb.msgID = str(data["msgId"])
+	}
 	cb.createTime = int64(num(data["createTime"]))
 	if cb.createTime == 0 {
 		cb.createTime = int64(num(data["CreateTime"]))
@@ -342,30 +351,44 @@ func normalizeMsgTypeString(s string) string {
 }
 
 // toCoreContent 将消息内容转换为供核心消费的文本（多媒体转 CQ 码）
-func toCoreContent(msgType, content string) string {
+// 多媒体 CQ 码会附带 GeWe 下载参数（aeskey/size/msgId/xml），供依赖模块按需调 downloadCdn/downloadVoice。
+func toCoreContent(msgType, content, msgID string) string {
 	switch msgType {
 	case "text":
 		return strings.TrimSpace(content)
 	case "image":
-		if u := extractURL(content); u != "" {
-			return fmt.Sprintf("[CQ:image,file=%s]", u)
+		u := extractURL(content)
+		if u == "" {
+			return ""
 		}
-		return ""
+		aeskey := extractAttr(content, "aeskey")
+		size := firstNonEmpty(extractAttr(content, "total_size"), extractAttr(content, "totalsize"))
+		suffix := firstNonEmpty(extractAttr(content, "suffix"), "jpg")
+		return fmt.Sprintf("[CQ:image,file=%s,aeskey=%s,size=%s,suffix=%s]", u, aeskey, size, suffix)
 	case "voice":
-		if u := extractURL(content); u != "" {
-			return fmt.Sprintf("[CQ:record,file=%s]", u)
+		u := extractURL(content)
+		if u == "" {
+			return ""
 		}
-		return ""
+		b64 := base64.StdEncoding.EncodeToString([]byte(content))
+		return fmt.Sprintf("[CQ:record,file=%s,msgId=%s,xml=%s]", u, msgID, b64)
 	case "video":
-		if u := extractURL(content); u != "" {
-			return fmt.Sprintf("[CQ:video,file=%s]", u)
+		u := extractURL(content)
+		if u == "" {
+			return ""
 		}
-		return ""
+		aeskey := extractAttr(content, "aeskey")
+		size := firstNonEmpty(extractAttr(content, "total_size"), extractAttr(content, "totalsize"))
+		return fmt.Sprintf("[CQ:video,file=%s,aeskey=%s,size=%s,type=4]", u, aeskey, size)
 	case "file":
-		if u := extractURL(content); u != "" {
-			return fmt.Sprintf("[CQ:file,file=%s]", u)
+		u := extractURL(content)
+		if u == "" {
+			return ""
 		}
-		return ""
+		aeskey := extractAttr(content, "aeskey")
+		size := firstNonEmpty(extractAttr(content, "total_size"), extractAttr(content, "totalsize"))
+		suffix := extractAttr(content, "suffix")
+		return fmt.Sprintf("[CQ:file,file=%s,aeskey=%s,size=%s,suffix=%s]", u, aeskey, size, suffix)
 	case "appmsg":
 		// MsgType=49：解析 XML（appmsg.type）细分类型，提取标题进核心。
 		appType, title, u := parseAppMsg(content)
@@ -450,6 +473,27 @@ func extractURL(xml string) string {
 	} {
 		if m := re.FindStringSubmatch(xml); len(m) > 1 && m[1] != "" {
 			return strings.TrimSpace(m[1])
+		}
+	}
+	return ""
+}
+
+// extractAttr 从 XML 片段中提取指定属性值（不区分大小写）。
+func extractAttr(xml, attr string) string {
+	if xml == "" {
+		return ""
+	}
+	re := regexp.MustCompile(`(?i)` + regexp.QuoteMeta(attr) + `="([^"]*)"`)
+	if m := re.FindStringSubmatch(xml); len(m) > 1 {
+		return strings.TrimSpace(m[1])
+	}
+	return ""
+}
+
+func firstNonEmpty(vals ...string) string {
+	for _, v := range vals {
+		if v != "" {
+			return v
 		}
 	}
 	return ""
